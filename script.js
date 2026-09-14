@@ -8,6 +8,7 @@
    NAVIGATION
 ========================================= */
 
+
 const navLinks = document.querySelectorAll(".navbar nav a");
 
 navLinks.forEach(link => {
