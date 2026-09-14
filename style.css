@@ -38,7 +38,7 @@ input {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 16px;
+    padding: 5px 10px;
     background-color: #f4f1ea;
     position: sticky;
     top: 0;
