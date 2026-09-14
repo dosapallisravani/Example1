@@ -108,26 +108,36 @@ if (productImageInput) {
 ================================= */
 
 function startSellerVoice() {
-    const status = document.getElementById("sellerVoiceStatus");
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    status.textContent = "🎙️ Listening...";
+  if (!SpeechRecognition) {
+    alert("Voice recognition is not supported in this browser. Please use Google Chrome.");
+    return;
+  }
 
-    setTimeout(function () {
-        document.getElementById("sellerProductName").value =
-            "Cotton Handloom Saree";
+  const recognition = new SpeechRecognition();
 
-        document.getElementById("sellerQuantity").value = "20";
+  recognition.lang = "en-IN"; 
+  recognition.continuous = false;
+  recognition.interimResults = false;
 
-        document.getElementById("sellerPrice").value = "2000";
+  recognition.start();
 
-        document.getElementById("sellerLocation").value = "Eluru";
+  alert("Please speak now...");
 
-        status.textContent =
-            "✓ Voice details captured and displayed in the form.";
+  recognition.onresult = function (event) {
+    const spokenText = event.results[0][0].transcript;
 
-    }, 1200);
+    document.getElementById("sellerProductName").value = spokenText;
+
+    console.log("Seller voice text:", spokenText);
+  };
+
+  recognition.onerror = function (event) {
+    alert("Voice recognition error: " + event.error);
+  };
 }
-
 /* =================================
    GENERATE SMART CATALOG
 ================================= */
@@ -296,28 +306,36 @@ function publishProduct() {
 ================================= */
 
 function startBuyerVoice() {
-    const status = document.getElementById("buyerVoiceStatus");
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    status.textContent = "🎙️ Listening...";
+  if (!SpeechRecognition) {
+    alert("Voice recognition is not supported in this browser. Please use Google Chrome.");
+    return;
+  }
 
-    setTimeout(function () {
-        document.getElementById("buyerProduct").value =
-            "Cotton Handloom Sarees";
+  const recognition = new SpeechRecognition();
 
-        document.getElementById("buyerQuantity").value = "50";
+  recognition.lang = "en-IN";
+  recognition.continuous = false;
+  recognition.interimResults = false;
 
-        document.getElementById("buyerBudget").value = "2200";
+  recognition.start();
 
-        document.getElementById("buyerLocation").value =
-            "Hyderabad";
+  alert("Please speak now...");
 
-        status.textContent =
-            "✓ Voice requirement captured and displayed in the form.";
+  recognition.onresult = function (event) {
+    const spokenText = event.results[0][0].transcript;
 
-    }, 1200);
-}
+    document.getElementById("buyerProduct").value = spokenText;
 
-/* =================================
+    console.log("Buyer voice text:", spokenText);
+  };
+
+  recognition.onerror = function (event) {
+    alert("Voice recognition error: " + event.error);
+  };
+}/* =================================
    AI MATCHING
 ================================= */
 
