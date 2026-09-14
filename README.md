@@ -1,7 +1,5 @@
  # AgriCraft Connect 🌾
- 
-       https://dosapallisravani.github.io/Example1/
-       https://dosapallisravani.github.io/Example1/
+
 ### AI-Powered Market Linkage for Rural Producers
 
 AgriCraft Connect is a Smart India Hackathon prototype designed to connect rural producers, artisans, and buyers through AI-assisted product cataloging and smart market matching.
@@ -9,6 +7,7 @@ AgriCraft Connect is a Smart India Hackathon prototype designed to connect rural
 The platform allows rural producers to list products using a photo and local-language voice input. Buyers can share their requirements, and the system helps identify suitable products and producers.
 
 ---
+https://dosapallisravani.github.io/Example1/
 
 ## 🚀 Problem Statement
 
