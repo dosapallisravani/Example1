@@ -970,32 +970,39 @@ window.addEventListener("load", function () {
       savedProduct.location;
 
 });
-/* ================================
-   MOBILE MENU
-================================ */
-const menuToggle = document.getElementById('menuToggle');
-const navLinks = document.getElementById('navLinks');
+/* =================================
+   MOBILE NAVBAR
+================================= */
 
-menuToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-});
+const menuToggle = document.getElementById("menuToggle");
+const navLinks = document.getElementById("navLinks");
+
+if (menuToggle && navLinks) {
+
+    menuToggle.addEventListener("click", function () {
+
+        navLinks.classList.toggle("active");
 
         if (navLinks.classList.contains("active")) {
-            menuToggle.innerHTML = "✕";
+            menuToggle.textContent = "✕";
         } else {
-            menuToggle.innerHTML = "☰";
+            menuToggle.textContent = "☰";
         }
+
     });
 
 
-    // Close menu after clicking a link
+    // Close menu when a link is clicked
     const navItems = navLinks.querySelectorAll("a");
 
-    navItems.forEach(function (link) {
-        link.addEventListener("click", function () {
+    navItems.forEach(function (item) {
+
+        item.addEventListener("click", function () {
+
             navLinks.classList.remove("active");
-            menuToggle.innerHTML = "☰";
+            menuToggle.textContent = "☰";
+
         });
+
     });
 }
-
