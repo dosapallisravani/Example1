@@ -61,10 +61,6 @@ function goToOrders() {
 }
 
 
-/* =========================
-   VOICE RECOGNITION HELPER
-========================= */
-
 function createVoiceRecognition() {
   const SpeechRecognition =
     window.SpeechRecognition ||
@@ -79,22 +75,15 @@ function createVoiceRecognition() {
 
   const recognition = new SpeechRecognition();
 
-  // English India voice recognition
-  recognition.lang = "en-IN";
+  // User selected local language
+  recognition.lang = selectedLanguage;
 
-  // Stop after user finishes speaking
   recognition.continuous = false;
-
-  // Show only final recognized text
   recognition.interimResults = false;
-
-  // Best available result
   recognition.maxAlternatives = 1;
 
   return recognition;
 }
-
-
 /* =========================
    SELLER VOICE INPUT
 ========================= */
@@ -902,4 +891,70 @@ document.addEventListener("DOMContentLoaded", function () {
       JSON.parse(savedOrder)
     );
   }
+});
+/* =========================
+   LANGUAGE SELECTION
+========================= */
+
+let selectedLanguage =
+  localStorage.getItem("agriCraftLanguage") || "en-IN";
+
+function changeLanguage() {
+  const languageSelect =
+    document.getElementById("languageSelect");
+
+  if (!languageSelect) {
+    return;
+  }
+
+  selectedLanguage = languageSelect.value;
+
+  localStorage.setItem(
+    "agriCraftLanguage",
+    selectedLanguage
+  );
+
+  alert("Language changed successfully!");
+}
+
+let selectedLanguage =
+  localStorage.getItem("agriCraftLanguage") || "en-IN";
+
+function changeLanguage() {
+  const languageSelect =
+    document.getElementById("languageSelect");
+
+  if (!languageSelect) {
+    return;
+  }
+
+  selectedLanguage = languageSelect.value;
+
+  localStorage.setItem(
+    "agriCraftLanguage",
+    selectedLanguage
+  );
+
+  alert("Language changed successfully!");
+}
+
+
+// Other functions...
+// startSellerVoice()
+// startBuyerVoice()
+// createVoiceRecognition()
+// requestToBuy()
+// showOrderRequests()
+
+
+// MUST BE AT THE END OF script.js
+document.addEventListener("DOMContentLoaded", function () {
+  const languageSelect =
+    document.getElementById("languageSelect");
+
+  if (languageSelect) {
+    languageSelect.value = selectedLanguage;
+  }
+
+  showOrderRequests();
 });
