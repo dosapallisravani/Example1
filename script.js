@@ -1,814 +1,905 @@
-/* =================================
-   GLOBAL DATA
-================================= */
-
-let selectedProduct = {
-    name: "Handwoven Cotton Saree",
-    description: "Traditional handloom product from a rural artisan.",
-    image: "images/craft1.jpg",
-    quantity: 20,
-    price: 2000,
-    location: "Eluru"
-};
-
-let buyerRequest = null;
-let orderData = null;
+/* =====================================================
+   AGRICRAFT CONNECT - COMPLETE SCRIPT
+   Voice Recognition: English India (en-IN)
+===================================================== */
 
 
-/* =================================
-   MOBILE NAVBAR
-================================= */
+/* =========================
+   MOBILE NAVIGATION
+========================= */
 
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.getElementById("navLinks");
 
 if (menuToggle && navLinks) {
+  menuToggle.addEventListener("click", function () {
+    navLinks.classList.toggle("active");
+  });
 
-    menuToggle.addEventListener("click", function () {
-        navLinks.classList.toggle("active");
-
-        if (navLinks.classList.contains("active")) {
-            menuToggle.textContent = "✕";
-        } else {
-            menuToggle.textContent = "☰";
-        }
+  document.querySelectorAll(".nav-links a").forEach(function (link) {
+    link.addEventListener("click", function () {
+      navLinks.classList.remove("active");
     });
-
-    const navItems = navLinks.querySelectorAll("a");
-
-    navItems.forEach(function (item) {
-        item.addEventListener("click", function () {
-            navLinks.classList.remove("active");
-            menuToggle.textContent = "☰";
-        });
-    });
+  });
 }
 
 
-/* =================================
-   NAVIGATION BUTTONS
-================================= */
+/* =========================
+   PAGE NAVIGATION
+========================= */
 
 function goToSeller() {
-    const sellerSection = document.getElementById("seller");
+  const sellerSection = document.getElementById("seller");
 
-    if (sellerSection) {
-        sellerSection.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-    }
+  if (sellerSection) {
+    sellerSection.scrollIntoView({
+      behavior: "smooth"
+    });
+  }
 }
 
 function goToBuyer() {
-    const buyerSection = document.getElementById("buyer");
+  const buyerSection = document.getElementById("buyer");
 
-    if (buyerSection) {
-        buyerSection.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-    }
+  if (buyerSection) {
+    buyerSection.scrollIntoView({
+      behavior: "smooth"
+    });
+  }
+}
+
+function goToOrders() {
+  const ordersSection = document.getElementById("orders");
+
+  if (ordersSection) {
+    ordersSection.scrollIntoView({
+      behavior: "smooth"
+    });
+  }
+
+  showOrderRequests();
 }
 
 
-/* =================================
-   IMAGE UPLOAD PREVIEW
-================================= */
+/* =========================
+   VOICE RECOGNITION HELPER
+========================= */
 
-const productImageInput = document.getElementById("productImage");
+function createVoiceRecognition() {
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert(
+      "Voice recognition is not supported in this browser. Please use Google Chrome."
+    );
+    return null;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  // English India voice recognition
+  recognition.lang = "en-IN";
+
+  // Stop after user finishes speaking
+  recognition.continuous = false;
+
+  // Show only final recognized text
+  recognition.interimResults = false;
+
+  // Best available result
+  recognition.maxAlternatives = 1;
+
+  return recognition;
+}
+
+
+/* =========================
+   SELLER VOICE INPUT
+========================= */
+
+function startSellerVoice() {
+  const productInput = document.getElementById("sellerProductName");
+
+  if (!productInput) {
+    alert("Seller product input field not found.");
+    return;
+  }
+
+  const recognition = createVoiceRecognition();
+
+  if (!recognition) {
+    return;
+  }
+
+  const voiceButton = event?.currentTarget;
+
+  if (voiceButton) {
+    voiceButton.disabled = true;
+    voiceButton.innerText = "🎤 Listening...";
+  }
+
+  productInput.placeholder = "Listening... Please speak in English";
+  productInput.focus();
+
+  recognition.onstart = function () {
+    console.log("Seller voice recognition started");
+  };
+
+  recognition.onresult = function (event) {
+    const spokenText = event.results[0][0].transcript;
+
+    productInput.value = spokenText;
+
+    productInput.dispatchEvent(new Event("input", {
+      bubbles: true
+    }));
+
+    console.log("Seller recognised text:", spokenText);
+  };
+
+  recognition.onerror = function (event) {
+    console.error("Seller voice error:", event.error);
+
+    if (event.error === "not-allowed") {
+      alert(
+        "Microphone permission denied. Please allow microphone access in Chrome."
+      );
+    } else if (event.error === "no-speech") {
+      alert("No speech detected. Please speak clearly and try again.");
+    } else if (event.error === "audio-capture") {
+      alert("Microphone not found. Please check your microphone.");
+    } else {
+      alert("Voice recognition error: " + event.error);
+    }
+  };
+
+  recognition.onend = function () {
+    productInput.placeholder = "Enter or speak product name";
+
+    if (voiceButton) {
+      voiceButton.disabled = false;
+      voiceButton.innerText = "🎤 Speak Product Name";
+    }
+
+    console.log("Seller voice recognition ended");
+  };
+
+  try {
+    recognition.start();
+  } catch (error) {
+    console.error("Recognition start error:", error);
+  }
+}
+
+
+/* =========================
+   BUYER VOICE INPUT
+========================= */
+
+function startBuyerVoice() {
+  const productInput = document.getElementById("buyerProduct");
+
+  if (!productInput) {
+    alert("Buyer product input field not found.");
+    return;
+  }
+
+  const recognition = createVoiceRecognition();
+
+  if (!recognition) {
+    return;
+  }
+
+  const voiceButton = event?.currentTarget;
+
+  if (voiceButton) {
+    voiceButton.disabled = true;
+    voiceButton.innerText = "🎤 Listening...";
+  }
+
+  productInput.placeholder = "Listening... Please speak in English";
+  productInput.focus();
+
+  recognition.onstart = function () {
+    console.log("Buyer voice recognition started");
+  };
+
+  recognition.onresult = function (event) {
+    const spokenText = event.results[0][0].transcript;
+
+    productInput.value = spokenText;
+
+    productInput.dispatchEvent(new Event("input", {
+      bubbles: true
+    }));
+
+    console.log("Buyer recognised text:", spokenText);
+  };
+
+  recognition.onerror = function (event) {
+    console.error("Buyer voice error:", event.error);
+
+    if (event.error === "not-allowed") {
+      alert(
+        "Microphone permission denied. Please allow microphone access in Chrome."
+      );
+    } else if (event.error === "no-speech") {
+      alert("No speech detected. Please speak clearly and try again.");
+    } else if (event.error === "audio-capture") {
+      alert("Microphone not found. Please check your microphone.");
+    } else {
+      alert("Voice recognition error: " + event.error);
+    }
+  };
+
+  recognition.onend = function () {
+    productInput.placeholder = "Enter or speak product name";
+
+    if (voiceButton) {
+      voiceButton.disabled = false;
+      voiceButton.innerText = "🎤 Speak Product Name";
+    }
+
+    console.log("Buyer voice recognition ended");
+  };
+
+  try {
+    recognition.start();
+  } catch (error) {
+    console.error("Recognition start error:", error);
+  }
+}
+
+
+/* =========================
+   IMAGE PREVIEW
+========================= */
+
+const productImage = document.getElementById("productImage");
 const imagePreview = document.getElementById("imagePreview");
 const uploadPlaceholder = document.getElementById("uploadPlaceholder");
 
-if (productImageInput) {
+if (productImage) {
+  productImage.addEventListener("change", function () {
+    const file = this.files[0];
 
-    productImageInput.addEventListener("change", function (event) {
-
-        const file = event.target.files[0];
-
-        if (!file) {
-            return;
-        }
-
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-            imagePreview.src = e.target.result;
-            imagePreview.style.display = "block";
-            uploadPlaceholder.style.display = "none";
-        };
-
-        reader.readAsDataURL(file);
-    });
-}
-
-
-/* =================================
-   SELLER VOICE SIMULATION
-================================= */
-
-function startSellerVoice() {
-  const SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
-
-  if (!SpeechRecognition) {
-    alert("Voice recognition is not supported in this browser. Please use Google Chrome.");
-    return;
-  }
-
-  const recognition = new SpeechRecognition();
-
-  recognition.lang = "en-IN"; 
-  recognition.continuous = false;
-  recognition.interimResults = false;
-
-  recognition.start();
-
-  alert("Please speak now...");
-
-  recognition.onresult = function (event) {
-    const spokenText = event.results[0][0].transcript;
-
-    document.getElementById("sellerProductName").value = spokenText;
-
-    console.log("Seller voice text:", spokenText);
-  };
-
-  recognition.onerror = function (event) {
-    alert("Voice recognition error: " + event.error);
-  };
-}
-/* =================================
-   GENERATE SMART CATALOG
-================================= */
-
-function generateCatalog() {
-
-    const productName =
-        document.getElementById("sellerProductName").value.trim();
-
-    const quantity =
-        document.getElementById("sellerQuantity").value || 20;
-
-    const price =
-        document.getElementById("sellerPrice").value || 2000;
-
-    const location =
-        document.getElementById("sellerLocation").value.trim() || "Eluru";
-
-    const processing =
-        document.getElementById("aiProcessing");
-
-    const catalogResult =
-        document.getElementById("catalogResult");
-
-    const catalogEmpty =
-        document.getElementById("catalogEmpty");
-
-    if (!productName) {
-        alert("Please enter or speak the product name first.");
-        return;
+    if (!file) {
+      return;
     }
 
-    processing.style.display = "flex";
-    catalogResult.style.display = "none";
-    catalogEmpty.style.display = "none";
+    const reader = new FileReader();
 
-    setTimeout(function () {
+    reader.onload = function (event) {
+      if (imagePreview) {
+        imagePreview.src = event.target.result;
+        imagePreview.style.display = "block";
+      }
 
-        const productInfo = getProductInfo(productName);
+      if (uploadPlaceholder) {
+        uploadPlaceholder.style.display = "none";
+      }
+    };
 
-        selectedProduct = {
-            name: productInfo.name,
-            description: productInfo.description,
-            image: productInfo.image,
-            quantity: quantity,
-            price: price,
-            location: location
-        };
-
-        document.getElementById("catalogImage").src =
-            productInfo.image;
-
-        document.getElementById("catalogName").textContent =
-            productInfo.name;
-
-        document.getElementById("catalogDescription").textContent =
-            productInfo.description;
-
-        document.getElementById("catalogCategory").textContent =
-            "Category: " + productInfo.category;
-
-        document.getElementById("catalogTags").textContent =
-            "Tags: " + productInfo.tags;
-
-        document.getElementById("catalogQuantity").textContent =
-            "Quantity: " + quantity;
-
-        document.getElementById("catalogPrice").textContent =
-            "Price: ₹" + Number(price).toLocaleString("en-IN");
-
-        document.getElementById("catalogLocation").textContent =
-            "Location: " + location;
-
-        processing.style.display = "none";
-        catalogResult.style.display = "block";
-
-    }, 1500);
+    reader.readAsDataURL(file);
+  });
 }
 
 
-/* =================================
-   PRODUCT INFORMATION MAPPING
-================================= */
+/* =========================
+   PRODUCT IMAGE MAPPING
+========================= */
 
 function getProductInfo(productName) {
+  const name = productName.toLowerCase();
 
-    const name = productName.toLowerCase();
-
-    if (
-        name.includes("saree") ||
-        name.includes("sari") ||
-        name.includes("handloom") ||
-        name.includes("cotton")
-    ) {
-        return {
-            name: "Handwoven Cotton Saree",
-            description:
-                "Traditional cotton handloom saree made by a rural artisan.",
-            image: "images/craft1.jpg",
-            category: "Handloom",
-            tags: "Cotton, Handmade, Traditional"
-        };
-    }
-
-    if (
-        name.includes("pottery") ||
-        name.includes("pot") ||
-        name.includes("terracotta")
-    ) {
-        return {
-            name: "Handmade Terracotta Pottery",
-            description:
-                "Beautiful handmade terracotta pottery created by local artisans.",
-            image: "images/craft2.jpg",
-            category: "Pottery",
-            tags: "Terracotta, Handmade, Craft"
-        };
-    }
-
-    if (
-        name.includes("bamboo") ||
-        name.includes("basket")
-    ) {
-        return {
-            name: "Bamboo Handicraft Basket",
-            description:
-                "Eco-friendly bamboo basket made using traditional craft skills.",
-            image: "images/craft3.jpg",
-            category: "Bamboo Craft",
-            tags: "Bamboo, Eco-friendly, Handmade"
-        };
-    }
-
+  if (
+    name.includes("saree") ||
+    name.includes("sari") ||
+    name.includes("handloom") ||
+    name.includes("cotton") ||
+    name.includes("dress") ||
+    name.includes("cloth")
+  ) {
     return {
-        name: productName,
-        description:
-            "Handmade product listed by a rural producer.",
-        image: "images/craft1.jpg",
-        category: "Rural Product",
-        tags: "Handmade, Local, Traditional"
+      name: "Handloom Cotton Saree",
+      description:
+        "Beautifully handcrafted cotton saree made by rural artisans.",
+      category: "Handloom",
+      tags: "Cotton, Saree, Handmade, Traditional",
+      image: "images/craft1.jpg"
     };
+  }
+
+  if (
+    name.includes("pottery") ||
+    name.includes("pot") ||
+    name.includes("terracotta") ||
+    name.includes("clay")
+  ) {
+    return {
+      name: "Traditional Terracotta Pottery",
+      description:
+        "Eco-friendly handmade pottery created using traditional techniques.",
+      category: "Pottery",
+      tags: "Clay, Pottery, Handmade, Eco-friendly",
+      image: "images/craft2.jpg"
+    };
+  }
+
+  if (
+    name.includes("bamboo") ||
+    name.includes("basket") ||
+    name.includes("cane") ||
+    name.includes("wood")
+  ) {
+    return {
+      name: "Handmade Bamboo Basket",
+      description:
+        "Strong and sustainable bamboo basket made by skilled rural artisans.",
+      category: "Bamboo Craft",
+      tags: "Bamboo, Basket, Sustainable, Handmade",
+      image: "images/craft3.jpg"
+    };
+  }
+
+  return {
+    name: productName || "Handmade Rural Product",
+    description:
+      "A unique handmade product created by a skilled rural producer.",
+    category: "Handicraft",
+    tags: "Handmade, Rural, Traditional",
+    image: "images/craft1.jpg"
+  };
 }
 
 
-/* =================================
-   PUBLISH PRODUCT
-================================= */
+/* =========================
+   GENERATE AI CATALOG
+========================= */
 
-function publishProduct() {
+function generateCatalog() {
+  const productName =
+    document.getElementById("sellerProductName")?.value.trim();
 
-    localStorage.setItem(
-        "agriCraftProduct",
-        JSON.stringify(selectedProduct)
-    );
+  const quantity =
+    document.getElementById("sellerQuantity")?.value.trim();
 
-    alert("✓ Product published successfully!");
+  const price =
+    document.getElementById("sellerPrice")?.value.trim();
 
-    document.getElementById("buyer").scrollIntoView({
-        behavior: "smooth"
-    });
-}
+  const location =
+    document.getElementById("sellerLocation")?.value.trim();
 
-
-/* =================================
-   BUYER VOICE SIMULATION
-================================= */
-
-function startBuyerVoice() {
-  const SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
-
-  if (!SpeechRecognition) {
-    alert("Voice recognition is not supported in this browser. Please use Google Chrome.");
+  if (!productName) {
+    alert("Please enter or speak the product name first.");
     return;
   }
 
-  const recognition = new SpeechRecognition();
+  const product = getProductInfo(productName);
 
-  recognition.lang = "en-IN";
-  recognition.continuous = false;
-  recognition.interimResults = false;
+  const catalogImage = document.getElementById("catalogImage");
+  const catalogName = document.getElementById("catalogName");
+  const catalogDescription = document.getElementById("catalogDescription");
+  const catalogCategory = document.getElementById("catalogCategory");
+  const catalogTags = document.getElementById("catalogTags");
+  const catalogQuantity = document.getElementById("catalogQuantity");
+  const catalogPrice = document.getElementById("catalogPrice");
+  const catalogLocation = document.getElementById("catalogLocation");
 
-  recognition.start();
+  if (catalogImage) {
+    catalogImage.src = product.image;
+  }
 
-  alert("Please speak now...");
+  if (catalogName) {
+    catalogName.innerText = product.name;
+  }
 
-  recognition.onresult = function (event) {
-    const spokenText = event.results[0][0].transcript;
+  if (catalogDescription) {
+    catalogDescription.innerText = product.description;
+  }
 
-    document.getElementById("buyerProduct").value = spokenText;
+  if (catalogCategory) {
+    catalogCategory.innerText = product.category;
+  }
 
-    console.log("Buyer voice text:", spokenText);
+  if (catalogTags) {
+    catalogTags.innerText = product.tags;
+  }
+
+  if (catalogQuantity) {
+    catalogQuantity.innerText = quantity || "Not specified";
+  }
+
+  if (catalogPrice) {
+    catalogPrice.innerText = price
+      ? "₹" + price
+      : "Price not specified";
+  }
+
+  if (catalogLocation) {
+    catalogLocation.innerText = location || "Location not specified";
+  }
+
+  const catalogResult = document.getElementById("catalogResult");
+
+  if (catalogResult) {
+    catalogResult.style.display = "block";
+  }
+
+  alert("AI catalog generated successfully!");
+}
+
+
+/* =========================
+   PUBLISH PRODUCT
+========================= */
+
+function publishProduct() {
+  const productName =
+    document.getElementById("sellerProductName")?.value.trim();
+
+  const quantity =
+    document.getElementById("sellerQuantity")?.value.trim();
+
+  const price =
+    document.getElementById("sellerPrice")?.value.trim();
+
+  const location =
+    document.getElementById("sellerLocation")?.value.trim();
+
+  if (!productName || !quantity || !price || !location) {
+    alert("Please fill all seller details before publishing.");
+    return;
+  }
+
+  const product = getProductInfo(productName);
+
+  const publishedProduct = {
+    name: product.name,
+    description: product.description,
+    category: product.category,
+    tags: product.tags,
+    image: product.image,
+    quantity: quantity,
+    price: price,
+    location: location,
+    createdAt: new Date().toISOString()
   };
 
-  recognition.onerror = function (event) {
-    alert("Voice recognition error: " + event.error);
-  };
-}/* =================================
-   AI MATCHING
-================================= */
+  localStorage.setItem(
+    "agriCraftPublishedProduct",
+    JSON.stringify(publishedProduct)
+  );
+
+  alert("Your product has been published successfully!");
+
+  goToBuyer();
+}
+
+
+/* =========================
+   FIND AI MATCHES
+========================= */
 
 function findAIMatches() {
+  const buyerProduct =
+    document.getElementById("buyerProduct")?.value.trim();
 
-    const productInput =
-        document.getElementById("buyerProduct").value.trim();
+  const buyerQuantity =
+    document.getElementById("buyerQuantity")?.value.trim();
 
-    const quantity =
-        document.getElementById("buyerQuantity").value || 1;
+  const buyerBudget =
+    document.getElementById("buyerBudget")?.value.trim();
 
-    const budget =
-        document.getElementById("buyerBudget").value || 0;
+  if (!buyerProduct) {
+    alert("Please enter or speak the product you want to buy.");
+    return;
+  }
 
-    const location =
-        document.getElementById("buyerLocation").value.trim() ||
-        "Hyderabad";
+  const product = getProductInfo(buyerProduct);
 
-    const requiredDate =
-        document.getElementById("buyerDate").value || "Not specified";
+  const matchedProductImage =
+    document.getElementById("matchedProductImage");
 
-    if (!productInput) {
-        alert("Please enter the product you are looking for.");
-        return;
-    }
+  const matchedProductName =
+    document.getElementById("matchedProductName");
 
-    const productInfo = getProductInfo(productInput);
+  const matchedProductDescription =
+    document.getElementById("matchedProductDescription");
 
-    selectedProduct = {
-        ...selectedProduct,
-        name: productInfo.name,
-        description: productInfo.description,
-        image: productInfo.image
-    };
+  const matchedProductDetails =
+    document.getElementById("matchedProductDetails");
 
-    buyerRequest = {
-        product: productInfo.name,
-        quantity: quantity,
-        budget: budget,
-        location: location,
-        date: requiredDate
-    };
+  const matchEmpty =
+    document.getElementById("matchEmpty");
 
-    document.getElementById("matchedProductImage").src =
-        productInfo.image;
+  const matchCard =
+    document.getElementById("matchCard");
 
-    document.getElementById("matchedProductName").textContent =
-        productInfo.name;
+  if (matchedProductImage) {
+    matchedProductImage.src = product.image;
+  }
 
-    document.getElementById("matchedProductDescription").textContent =
-        productInfo.description;
+  if (matchedProductName) {
+    matchedProductName.innerText = product.name;
+  }
 
-    document.getElementById("matchedProductDetails").innerHTML = `
-        <span>📦 ${selectedProduct.quantity || 20} pieces</span>
-        <span>₹${Number(selectedProduct.price || 2000).toLocaleString("en-IN")} / piece</span>
-        <span>📍 ${selectedProduct.location || "Eluru"}</span>
+  if (matchedProductDescription) {
+    matchedProductDescription.innerText = product.description;
+  }
+
+  if (matchedProductDetails) {
+    matchedProductDetails.innerHTML = `
+      <p><strong>Category:</strong> ${product.category}</p>
+      <p><strong>Quantity Required:</strong> ${
+        buyerQuantity || "Not specified"
+      }</p>
+      <p><strong>Budget:</strong> ${
+        buyerBudget ? "₹" + buyerBudget : "Not specified"
+      }</p>
+      <p><strong>AI Match:</strong> 94% suitable</p>
     `;
+  }
 
-    document.getElementById("matchEmpty").style.display = "none";
-    document.getElementById("matchCard").style.display = "block";
+  if (matchEmpty) {
+    matchEmpty.style.display = "none";
+  }
 
-    document.getElementById("matchCard").scrollIntoView({
-        behavior: "smooth",
-        block: "nearest"
-    });
+  if (matchCard) {
+    matchCard.style.display = "block";
+  }
 }
 
 
-/* =================================
+/* =========================
    REQUEST TO BUY
-================================= */
+========================= */
 
-/* =================================
-   GO TO ORDERS
-================================= */function requestToBuy() {
-    const productName =
-        document.getElementById("matchedProductName").textContent;
+function requestToBuy() {
+  const buyerProduct =
+    document.getElementById("buyerProduct")?.value.trim();
 
-    const quantity =
-        document.getElementById("buyerQuantity").value || "1";
+  const buyerQuantity =
+    document.getElementById("buyerQuantity")?.value.trim();
 
-    const budget =
-        document.getElementById("buyerBudget").value || "0";
+  const buyerBudget =
+    document.getElementById("buyerBudget")?.value.trim();
 
-    const location =
-        document.getElementById("buyerLocation").value || "Not specified";
+  const buyerLocation =
+    document.getElementById("buyerLocation")?.value.trim();
 
-    const requiredDate =
-        document.getElementById("buyerDate").value || "Not specified";
+  const buyerDate =
+    document.getElementById("buyerDate")?.value;
 
-    orderData = {
-        orderId: "AC-" + Date.now(),
-        buyer: "Demo Buyer",
-        seller: "Verified Rural Producer",
-        product: productName,
-        quantity: quantity,
-        offeredPrice: budget,
-        location: location,
-        date: requiredDate,
-        status: "Pending",
-        verification: "Not Verified",
-        createdAt: new Date().toLocaleString("en-IN")
-    };
+  if (!buyerProduct) {
+    alert("Please select or search for a product first.");
+    return;
+  }
 
-    localStorage.setItem(
-        "agriCraftOrder",
-        JSON.stringify(orderData)
-    );
+  const product = getProductInfo(buyerProduct);
 
-    openModal(`
-        <div class="modal-heading">
-            <div class="modal-icon">📩</div>
-            <h2>Request Sent Successfully</h2>
-            <p>Your buyer request has been saved.</p>
-        </div>
+  const savedProduct = JSON.parse(
+    localStorage.getItem("agriCraftPublishedProduct") || "null"
+  );
 
-        <div class="modal-summary">
-            <p><strong>Product:</strong> ${orderData.product}</p>
-            <p><strong>Quantity:</strong> ${orderData.quantity}</p>
-            <p><strong>Budget:</strong> ₹${orderData.offeredPrice} / piece</p>
-            <p><strong>Location:</strong> ${orderData.location}</p>
-        </div>
+  const orderData = {
+    orderId: "AC" + Date.now(),
+    buyer: "Buyer",
+    seller: savedProduct?.location
+      ? "Artisan from " + savedProduct.location
+      : "Rural Artisan",
+    product: product.name,
+    description: product.description,
+    image: product.image,
+    quantity: buyerQuantity || "1",
+    offeredPrice: buyerBudget
+      ? "₹" + buyerBudget
+      : "Price to be negotiated",
+    location: buyerLocation || "Not specified",
+    preferredDate: buyerDate || "Not specified",
+    status: "Pending",
+    verification: "Not Verified",
+    createdAt: new Date().toLocaleString("en-IN")
+  };
 
-        <button
-            class="btn primary full-btn"
-            onclick="closeModal(); goToOrders(); showOrderRequests();"
-        >
-            View My Order
-        </button>
-    `);
+  localStorage.setItem(
+    "agriCraftOrder",
+    JSON.stringify(orderData)
+  );
+
+  console.log("Order saved:", orderData);
+
+  alert("Buy request sent successfully!");
+
+  showOrderRequests();
+  goToOrders();
 }
 
 
-/* =================================
-   SHOW ORDER REQUESTS
-================================= */
+/* =========================
+   SHOW MY ORDERS
+========================= */
 
 function showOrderRequests() {
-    const output = document.getElementById("orderOutput");
+  const orderOutput = document.getElementById("orderOutput");
 
-    const savedOrder =
-        JSON.parse(localStorage.getItem("agriCraftOrder"));
+  if (!orderOutput) {
+    return;
+  }
 
-    output.style.display = "block";
+  const savedOrder = localStorage.getItem("agriCraftOrder");
 
-    if (!savedOrder) {
-        output.innerHTML = `
-            <div class="request-box">
-                <h3>No orders found</h3>
-                <p>First search a product and click Request to Buy.</p>
-            </div>
-        `;
-        return;
-    }
-
-    output.innerHTML = `
-        <div class="request-box">
-            <h3>📩 Saved Buyer Request</h3>
-
-            <p><strong>Order ID:</strong> ${savedOrder.orderId}</p>
-            <p><strong>Buyer:</strong> ${savedOrder.buyer}</p>
-            <p><strong>Product:</strong> ${savedOrder.product}</p>
-            <p><strong>Quantity:</strong> ${savedOrder.quantity}</p>
-            <p><strong>Offered Price:</strong> ₹${savedOrder.offeredPrice} / piece</p>
-            <p><strong>Delivery Location:</strong> ${savedOrder.location}</p>
-            <p><strong>Required By:</strong> ${savedOrder.date}</p>
-            <p><strong>Status:</strong> ${savedOrder.status}</p>
-
-            <div class="request-actions">
-                <button
-                    class="small-btn accept-btn"
-                    onclick="acceptOrder()"
-                >
-                    Accept
-                </button>
-
-                <button
-                    class="small-btn negotiate-btn"
-                    onclick="negotiateOrder()"
-                >
-                    Negotiate
-                </button>
-            </div>
-        </div>
+  if (!savedOrder) {
+    orderOutput.innerHTML = `
+      <div class="empty-order">
+        <h3>No orders yet</h3>
+        <p>Your requested products will appear here.</p>
+      </div>
     `;
+    return;
+  }
+
+  const order = JSON.parse(savedOrder);
+
+  orderOutput.innerHTML = `
+    <div class="order-card">
+      <img 
+        src="${order.image}" 
+        alt="${order.product}"
+        class="order-image"
+      >
+
+      <div class="order-details">
+        <h3>${order.product}</h3>
+
+        <p>${order.description}</p>
+
+        <p>
+          <strong>Order ID:</strong>
+          ${order.orderId}
+        </p>
+
+        <p>
+          <strong>Quantity:</strong>
+          ${order.quantity}
+        </p>
+
+        <p>
+          <strong>Offered Price:</strong>
+          ${order.offeredPrice}
+        </p>
+
+        <p>
+          <strong>Location:</strong>
+          ${order.location}
+        </p>
+
+        <p>
+          <strong>Preferred Date:</strong>
+          ${order.preferredDate}
+        </p>
+
+        <p>
+          <strong>Status:</strong>
+          <span class="order-status">${order.status}</span>
+        </p>
+
+        <p>
+          <strong>Verification:</strong>
+          ${order.verification}
+        </p>
+
+        <div class="order-actions">
+          <button onclick="acceptOrder()" type="button">
+            Accept
+          </button>
+
+          <button onclick="negotiateOrder()" type="button">
+            Negotiate
+          </button>
+
+          <button onclick="startVerification()" type="button">
+            Verify Order
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 
-/* =================================
+/* =========================
    ACCEPT ORDER
-================================= */
+========================= */
 
 function acceptOrder() {
+  const savedOrder = localStorage.getItem("agriCraftOrder");
 
-    const savedOrder =
-        JSON.parse(localStorage.getItem("agriCraftOrder"));
+  if (!savedOrder) {
+    alert("No order found.");
+    return;
+  }
 
-    if (!savedOrder) {
-        return;
-    }
+  const order = JSON.parse(savedOrder);
 
-    savedOrder.status = "Accepted";
-    localStorage.setItem(
-        "agriCraftOrder",
-        JSON.stringify(savedOrder)
-    );
+  order.status = "Accepted";
 
-    openModal(`
-        <div class="modal-heading">
-            <div class="modal-icon">✅</div>
-            <h2>Request Accepted</h2>
-            <p>
-                The order is ready for voice verification.
-            </p>
-        </div>
+  localStorage.setItem(
+    "agriCraftOrder",
+    JSON.stringify(order)
+  );
 
-        <button
-            class="btn primary full-btn"
-            onclick="startVerification()"
-        >
-            Start Verification
-        </button>
-    `);
+  alert("Order accepted successfully!");
+
+  showOrderRequests();
 }
 
 
-/* =================================
+/* =========================
    NEGOTIATE ORDER
-================================= */
+========================= */
 
 function negotiateOrder() {
+  const newPrice = prompt(
+    "Enter your suggested price:"
+  );
 
-    openModal(`
-        <div class="modal-heading">
-            <div class="modal-icon">💬</div>
-            <h2>Negotiate Price</h2>
-            <p>
-                Enter your proposed price for this order.
-            </p>
-        </div>
+  if (!newPrice) {
+    return;
+  }
 
-        <label class="field-label">Your Proposed Price</label>
+  const savedOrder = localStorage.getItem("agriCraftOrder");
 
-        <input
-            type="number"
-            id="negotiationPrice"
-            placeholder="Enter price"
-        >
+  if (!savedOrder) {
+    alert("No order found.");
+    return;
+  }
 
-        <button
-            class="btn primary full-btn"
-            onclick="submitNegotiation()"
-        >
-            Send Proposal
-        </button>
-    `);
-}
+  const order = JSON.parse(savedOrder);
 
-function submitNegotiation() {
+  order.offeredPrice = "₹" + newPrice;
+  order.status = "Price Negotiation";
 
-    const price =
-        document.getElementById("negotiationPrice").value;
+  localStorage.setItem(
+    "agriCraftOrder",
+    JSON.stringify(order)
+  );
 
-    if (!price) {
-        alert("Please enter a proposed price.");
-        return;
-    }
+  alert("Negotiation offer submitted!");
 
-    closeModal();
-
-    alert(
-        "✓ Negotiation proposal sent: ₹" +
-        Number(price).toLocaleString("en-IN") +
-        " per piece"
-    );
+  showOrderRequests();
 }
 
 
-/* =================================
-   VOICE / OTP VERIFICATION
-================================= */
+/* =========================
+   START VERIFICATION
+========================= */
 
 function startVerification() {
+  const savedOrder = localStorage.getItem("agriCraftOrder");
 
-    closeModal();
+  if (!savedOrder) {
+    alert("No order found.");
+    return;
+  }
 
-    setTimeout(function () {
-
-        openModal(`
-            <div class="modal-heading">
-                <div class="modal-icon">📞</div>
-                <h2>Voice Verification</h2>
-                <p>
-                    A verification call is being simulated to the
-                    registered mobile number.
-                </p>
-            </div>
-
-            <div class="verification-box">
-                <p>Press <strong>1</strong> to confirm the order.</p>
-                <p>Press <strong>2</strong> to cancel the order.</p>
-            </div>
-
-            <button
-                class="btn primary full-btn"
-                onclick="showOTPBox()"
-            >
-                Press 1 — Confirm
-            </button>
-        `);
-
-    }, 300);
+  showOTPBox();
 }
+
+
+/* =========================
+   OTP BOX
+========================= */
 
 function showOTPBox() {
+  const modalOverlay = document.getElementById("modalOverlay");
+  const modalContent = document.getElementById("modalContent");
 
-    openModal(`
-        <div class="modal-heading">
-            <div class="modal-icon">🔐</div>
-            <h2>Enter Verification Code</h2>
-            <p>
-                Demo verification code is <strong>2026</strong>.
-            </p>
-        </div>
+  if (!modalOverlay || !modalContent) {
+    const otp = prompt(
+      "Enter demo verification code 2026:"
+    );
 
-        <input
-            type="text"
-            id="verificationCode"
-            placeholder="Enter 4-digit code"
-            maxlength="4"
-        >
+    if (otp === "2026") {
+      verifyOrder();
+    } else {
+      alert("Invalid verification code.");
+    }
 
-        <button
-            class="btn primary full-btn"
-            onclick="verifyOrder()"
-        >
-            Verify Order
-        </button>
-    `);
+    return;
+  }
+
+  modalContent.innerHTML = `
+    <div class="otp-box">
+      <h2>Verify Your Order</h2>
+      <p>Enter the demo OTP sent to your mobile.</p>
+
+      <input
+        type="text"
+        id="otpInput"
+        placeholder="Enter OTP"
+        maxlength="4"
+      >
+
+      <button type="button" onclick="verifyOrder()">
+        Verify
+      </button>
+
+      <button type="button" onclick="closeModal()">
+        Cancel
+      </button>
+    </div>
+  `;
+
+  modalOverlay.style.display = "flex";
 }
+
+
+/* =========================
+   VERIFY ORDER
+========================= */
 
 function verifyOrder() {
+  const otpInput = document.getElementById("otpInput");
 
-    const code =
-        document.getElementById("verificationCode").value;
+  if (otpInput && otpInput.value !== "2026") {
+    alert("Invalid OTP. Use demo code 2026.");
+    return;
+  }
 
-    if (code !== "2026") {
-        alert("Incorrect code. Use demo code 2026.");
-        return;
-    }
+  const savedOrder = localStorage.getItem("agriCraftOrder");
 
-    const savedOrder =
-        JSON.parse(localStorage.getItem("agriCraftOrder"));
+  if (!savedOrder) {
+    alert("No order found.");
+    return;
+  }
 
-    if (savedOrder) {
-        savedOrder.status = "Verified";
-        savedOrder.verification = "Voice + OTP Verified";
-        savedOrder.orderId =
-            "AC-" + Math.floor(100000 + Math.random() * 900000);
+  const order = JSON.parse(savedOrder);
 
-        savedOrder.confirmedAt =
-            new Date().toLocaleString("en-IN");
+  order.verification = "Verified";
+  order.status = "Verified and Confirmed";
 
-        localStorage.setItem(
-            "agriCraftOrder",
-            JSON.stringify(savedOrder)
-        );
-    }
+  localStorage.setItem(
+    "agriCraftOrder",
+    JSON.stringify(order)
+  );
 
-    openModal(`
-        <div class="modal-heading">
-            <div class="modal-icon">🎉</div>
-            <h2>Order Verified Successfully</h2>
-            <p>
-                Your digital order receipt has been generated.
-            </p>
-        </div>
+  closeModal();
 
-        <button
-            class="btn primary full-btn"
-            onclick="closeModal(); showVerifiedOrder();"
-        >
-            View Digital Receipt
-        </button>
-    `);
+  alert("Order verified successfully!");
+
+  showOrderRequests();
 }
 
 
-/* =================================
-   SHOW VERIFIED ORDER
-================================= */
-
-function showVerifiedOrder() {
-
-    const output = document.getElementById("orderOutput");
-
-    const savedOrder =
-        JSON.parse(localStorage.getItem("agriCraftOrder"));
-
-    if (!savedOrder || savedOrder.status !== "Verified") {
-
-        output.style.display = "block";
-
-        output.innerHTML = `
-            <div class="receipt-box">
-                <h3>No verified order available</h3>
-                <p>
-                    Complete the buyer request and verification process
-                    to generate a receipt.
-                </p>
-            </div>
-        `;
-
-        return;
-    }
-
-    output.style.display = "block";
-
-    output.innerHTML = `
-        <div class="receipt-box">
-            <h3>🧾 Digital Order Receipt</h3>
-
-            <p><strong>Order ID:</strong> ${savedOrder.orderId}</p>
-            <p><strong>Buyer:</strong> ${savedOrder.buyer}</p>
-            <p><strong>Seller:</strong> ${savedOrder.seller}</p>
-            <p><strong>Product:</strong> ${savedOrder.product}</p>
-            <p><strong>Quantity:</strong> ${savedOrder.quantity}</p>
-            <p><strong>Price:</strong> ₹${savedOrder.offeredPrice} / piece</p>
-            <p><strong>Delivery Location:</strong> ${savedOrder.location}</p>
-            <p><strong>Required By:</strong> ${savedOrder.date}</p>
-            <p><strong>Verification:</strong> ${savedOrder.verification}</p>
-            <p><strong>Confirmed At:</strong> ${savedOrder.confirmedAt}</p>
-
-            <div class="verified-tag">
-                ✓ ORDER CONFIRMED
-            </div>
-        </div>
-    `;
-
-    output.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-    });
-}
-
-
-/* =================================
+/* =========================
    MODAL FUNCTIONS
-================================= */
-
-function openModal(content) {
-
-    document.getElementById("modalContent").innerHTML = content;
-
-    document.getElementById("modalOverlay").classList.add("active");
-}
+========================= */
 
 function closeModal() {
-    document.getElementById("modalOverlay").classList.remove("active");
+  const modalOverlay = document.getElementById("modalOverlay");
+
+  if (modalOverlay) {
+    modalOverlay.style.display = "none";
+  }
 }
 
-document.getElementById("modalOverlay").addEventListener("click", function (event) {
 
-    if (event.target === this) {
-        closeModal();
-    }
+/* =========================
+   RESTORE ORDER ON PAGE LOAD
+========================= */
 
-});
 document.addEventListener("DOMContentLoaded", function () {
-    const savedOrder =
-        JSON.parse(localStorage.getItem("agriCraftOrder"));
+  showOrderRequests();
 
-    if (savedOrder) {
-        orderData = savedOrder;
-    }
+  const savedOrder = localStorage.getItem("agriCraftOrder");
+
+  if (savedOrder) {
+    console.log(
+      "Saved order restored:",
+      JSON.parse(savedOrder)
+    );
+  }
 });
