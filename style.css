@@ -1334,3 +1334,63 @@ footer .copyright {
     }
 
        }
+/* ================================
+   MOBILE HAMBURGER MENU
+================================ */
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #35402D;
+    padding: 5px;
+}
+
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    .nav-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: #FFFDF8;
+        padding: 15px 0;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        border-radius: 0 0 15px 15px;
+        z-index: 1000;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+        padding: 13px 10px;
+        font-size: 15px;
+    }
+
+    .nav-links a:hover {
+        background: #E5E9D5;
+    }
+}
