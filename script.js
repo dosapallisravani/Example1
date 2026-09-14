@@ -108,13 +108,11 @@ if (productImageInput) {
 ================================= */
 
 function startSellerVoice() {
-
     const status = document.getElementById("sellerVoiceStatus");
 
-    status.textContent = "🎙️ Listening... Please speak your product details.";
+    status.textContent = "🎙️ Listening...";
 
     setTimeout(function () {
-
         document.getElementById("sellerProductName").value =
             "Cotton Handloom Saree";
 
@@ -125,11 +123,10 @@ function startSellerVoice() {
         document.getElementById("sellerLocation").value = "Eluru";
 
         status.textContent =
-            "✓ Voice details captured successfully.";
+            "✓ Voice details captured and displayed in the form.";
 
-    }, 1500);
+    }, 1200);
 }
-
 
 /* =================================
    GENERATE SMART CATALOG
@@ -299,14 +296,11 @@ function publishProduct() {
 ================================= */
 
 function startBuyerVoice() {
-
     const status = document.getElementById("buyerVoiceStatus");
 
-    status.textContent =
-        "🎙️ Listening... Please speak your requirement.";
+    status.textContent = "🎙️ Listening...";
 
     setTimeout(function () {
-
         document.getElementById("buyerProduct").value =
             "Cotton Handloom Sarees";
 
@@ -318,11 +312,10 @@ function startBuyerVoice() {
             "Hyderabad";
 
         status.textContent =
-            "✓ Buyer requirement captured successfully.";
+            "✓ Voice requirement captured and displayed in the form.";
 
-    }, 1500);
+    }, 1200);
 }
-
 
 /* =================================
    AI MATCHING
@@ -397,22 +390,36 @@ function findAIMatches() {
    REQUEST TO BUY
 ================================= */
 
-function requestToBuy() {
+/* =================================
+   GO TO ORDERS
+================================= */function requestToBuy() {
+    const productName =
+        document.getElementById("matchedProductName").textContent;
 
-    if (!buyerRequest) {
-        alert("Please search for a product first.");
-        return;
-    }
+    const quantity =
+        document.getElementById("buyerQuantity").value || "1";
+
+    const budget =
+        document.getElementById("buyerBudget").value || "0";
+
+    const location =
+        document.getElementById("buyerLocation").value || "Not specified";
+
+    const requiredDate =
+        document.getElementById("buyerDate").value || "Not specified";
 
     orderData = {
+        orderId: "AC-" + Date.now(),
         buyer: "Demo Buyer",
         seller: "Verified Rural Producer",
-        product: buyerRequest.product,
-        quantity: buyerRequest.quantity,
-        offeredPrice: buyerRequest.budget,
-        location: buyerRequest.location,
-        date: buyerRequest.date,
-        status: "Pending Verification"
+        product: productName,
+        quantity: quantity,
+        offeredPrice: budget,
+        location: location,
+        date: requiredDate,
+        status: "Pending",
+        verification: "Not Verified",
+        createdAt: new Date().toLocaleString("en-IN")
     };
 
     localStorage.setItem(
@@ -424,10 +431,7 @@ function requestToBuy() {
         <div class="modal-heading">
             <div class="modal-icon">📩</div>
             <h2>Request Sent Successfully</h2>
-            <p>
-                Your request has been sent to the producer.
-                The seller can accept or negotiate the request.
-            </p>
+            <p>Your buyer request has been saved.</p>
         </div>
 
         <div class="modal-summary">
@@ -439,22 +443,11 @@ function requestToBuy() {
 
         <button
             class="btn primary full-btn"
-            onclick="closeModal(); goToOrders();"
+            onclick="closeModal(); goToOrders(); showOrderRequests();"
         >
-            View Buyer Request
+            View My Order
         </button>
     `);
-}
-
-
-/* =================================
-   GO TO ORDERS
-================================= */
-
-function goToOrders() {
-    document.getElementById("orders").scrollIntoView({
-        behavior: "smooth"
-    });
 }
 
 
@@ -463,37 +456,35 @@ function goToOrders() {
 ================================= */
 
 function showOrderRequests() {
-
     const output = document.getElementById("orderOutput");
 
     const savedOrder =
         JSON.parse(localStorage.getItem("agriCraftOrder"));
 
+    output.style.display = "block";
+
     if (!savedOrder) {
-        output.style.display = "block";
         output.innerHTML = `
             <div class="request-box">
-                <h3>No buyer requests yet</h3>
-                <p>
-                    When a buyer sends a request, it will appear here.
-                </p>
+                <h3>No orders found</h3>
+                <p>First search a product and click Request to Buy.</p>
             </div>
         `;
         return;
     }
 
-    output.style.display = "block";
-
     output.innerHTML = `
         <div class="request-box">
-            <h3>New Buyer Request</h3>
+            <h3>📩 Saved Buyer Request</h3>
 
+            <p><strong>Order ID:</strong> ${savedOrder.orderId}</p>
             <p><strong>Buyer:</strong> ${savedOrder.buyer}</p>
             <p><strong>Product:</strong> ${savedOrder.product}</p>
             <p><strong>Quantity:</strong> ${savedOrder.quantity}</p>
             <p><strong>Offered Price:</strong> ₹${savedOrder.offeredPrice} / piece</p>
             <p><strong>Delivery Location:</strong> ${savedOrder.location}</p>
             <p><strong>Required By:</strong> ${savedOrder.date}</p>
+            <p><strong>Status:</strong> ${savedOrder.status}</p>
 
             <div class="request-actions">
                 <button
@@ -794,4 +785,12 @@ document.getElementById("modalOverlay").addEventListener("click", function (even
         closeModal();
     }
 
+});
+document.addEventListener("DOMContentLoaded", function () {
+    const savedOrder =
+        JSON.parse(localStorage.getItem("agriCraftOrder"));
+
+    if (savedOrder) {
+        orderData = savedOrder;
+    }
 });
