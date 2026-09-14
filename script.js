@@ -969,3 +969,34 @@ window.addEventListener("load", function () {
       savedProduct.location;
 
 });
+/* ================================
+   MOBILE MENU
+================================ */
+
+const menuToggle = document.getElementById("menuToggle");
+const navLinks = document.getElementById("navLinks");
+
+if (menuToggle && navLinks) {
+
+    menuToggle.addEventListener("click", function () {
+        navLinks.classList.toggle("active");
+
+        if (navLinks.classList.contains("active")) {
+            menuToggle.innerHTML = "✕";
+        } else {
+            menuToggle.innerHTML = "☰";
+        }
+    });
+
+
+    // Close menu after clicking a link
+    const navItems = navLinks.querySelectorAll("a");
+
+    navItems.forEach(function (link) {
+        link.addEventListener("click", function () {
+            navLinks.classList.remove("active");
+            menuToggle.innerHTML = "☰";
+        });
+    });
+}
+
