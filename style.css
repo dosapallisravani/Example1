@@ -38,7 +38,7 @@ input {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
+    padding: 8px 16px;
     background-color: #f4f1ea;
     position: sticky;
     top: 0;
@@ -65,7 +65,7 @@ input {
 
 .menu-toggle {
     display: none;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     cursor: pointer;
     color: #2c3529;
 }
@@ -85,7 +85,7 @@ input {
         background-color: #f4f1ea;
         padding: 20px;
         box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-        gap: 15px;
+        gap: 12px;
     }
 
     .nav-links.active {
