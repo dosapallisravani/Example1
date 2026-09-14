@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -11,585 +11,386 @@
 
 <body>
 
-  <!-- =========================
-       NAVBAR
-  ========================== -->
+  <!-- ================= HEADER ================= -->
+  <header class="navbar">
 
-  <nav class="navbar">
-    <div class="nav-container">
-
-      <a href="#home" class="logo">
-        <span class="logo-mark">A</span>
-        <span class="logo-text">
-          AgriCraft <b>Connect</b>
-        </span>
-      </a>
-
-      <button
-        class="menu-toggle"
-        id="menuToggle"
-        type="button"
-      >
-        ☰
-      </button>
-
-      <div class="nav-links" id="navLinks">
-        <a href="#home" data-i18n="navHome">Home</a>
-        <a href="#seller" data-i18n="navSell">Sell</a>
-        <a href="#buyer" data-i18n="navBuy">Buy</a>
-        <a href="#orders" data-i18n="navOrders">My Orders</a>
-        <a href="#about" data-i18n="navAbout">About</a>
-      </div>
-
-      <!-- Language Selector -->
-      <div class="language-selector">
-        <label for="languageSelect">🌐</label>
-
-        <select
-          id="languageSelect"
-          onchange="changeLanguage()"
-        >
-          <option value="en-IN">English</option>
-          <option value="te-IN">తెలుగు</option>
-          <option value="hi-IN">हिंदी</option>
-          <option value="kn-IN">ಕನ್ನಡ</option>
-          <option value="ta-IN">தமிழ்</option>
-          <option value="ml-IN">മലയാളം</option>
-        </select>
-      </div>
-
-    </div>
-  </nav>
-
-
-  <!-- =========================
-       HOME SECTION
-  ========================== -->
-
-  <section class="hero" id="home">
-
-    <div class="hero-content">
-      <span class="eyebrow" data-i18n="heroEyebrow">
-        AI-Powered Rural Marketplace
-      </span>
-
-      <h1 data-i18n="heroTitle">
-        Connect. Create. Grow.
-      </h1>
-
-      <p data-i18n="heroDescription">
-        Empowering rural producers through AI-powered market access.
-      </p>
-
-      <div class="hero-buttons">
-        <button
-          class="btn primary"
-          type="button"
-          onclick="goToSeller()"
-          data-i18n="sellButton"
-        >
-          Sell Your Product
-        </button>
-
-        <button
-          class="btn secondary"
-          type="button"
-          onclick="goToBuyer()"
-          data-i18n="findButton"
-        >
-          Find Products
-        </button>
-      </div>
+    <div class="brand">
+      <div class="brand-icon">✦</div>
+      <span>AgriCraft Connect</span>
     </div>
 
-    <div class="hero-image">
-      <img
-        src="images/artisan.jpg"
-        alt="Rural artisan"
-      >
-    </div>
+    <nav>
+      <a href="#home" class="active">Home</a>
+      <a href="#sell">Sell</a>
+      <a href="#buy">Buy</a>
+      <a href="#orders">My Orders</a>
+      <a href="#about">About</a>
+    </nav>
 
-  </section>
+  </header>
 
 
-  <!-- =========================
-       SELLER SECTION
-  ========================== -->
+  <!-- ================= HERO ================= -->
+  <main id="home">
 
-  <section class="section seller-section" id="seller">
+    <section class="hero">
 
-    <div class="section-heading">
-      <span class="eyebrow" data-i18n="sellerEyebrow">
-        For Rural Producers
-      </span>
+      <!-- LEFT -->
+      <div class="hero-content">
 
-      <h2 data-i18n="sellerTitle">
-        Sell Your Product
-      </h2>
-
-      <p data-i18n="sellerDescription">
-        Upload your product details and create a smart catalog.
-      </p>
-    </div>
-
-    <div class="form-card">
-
-      <div class="upload-area">
-        <input
-          type="file"
-          id="productImage"
-          accept="image/*"
-        >
-
-        <div id="uploadPlaceholder">
-          <span>📷</span>
-          <p data-i18n="uploadText">
-            Upload Product Image
-          </p>
+        <div class="prototype-badge">
+          <span>✦</span>
+          Smart India Hackathon Prototype
         </div>
 
-        <img
-          id="imagePreview"
-          alt="Product preview"
-          style="display: none;"
-        >
-      </div>
+        <h1>
+          From Local Craft to the
+          <span>Right Buyer</span>
+        </h1>
 
-      <div class="form-group">
-        <label
-          for="sellerProductName"
-          data-i18n="productNameLabel"
-        >
-          Product Name
-        </label>
+        <p>
+          AI-powered market linkage for rural producers.
+          List with a photo and your voice — we do the rest.
+        </p>
 
-        <div class="voice-input">
-          <input
-            type="text"
-            id="sellerProductName"
-            placeholder="Enter or speak product name"
-          >
+        <div class="hero-buttons">
 
-          <button
-            type="button"
-            onclick="startSellerVoice()"
-            data-i18n="speakButton"
-          >
-            🎤 Speak
-          </button>
+          <a href="#sell" class="btn primary">
+            Sell Your Product
+          </a>
+
+          <a href="#buy" class="btn secondary">
+            Find Products
+          </a>
+
         </div>
+
       </div>
 
-      <div class="form-group">
-        <label
-          for="sellerQuantity"
-          data-i18n="quantityLabel"
-        >
-          Quantity
-        </label>
 
-        <input
-          type="text"
-          id="sellerQuantity"
-          placeholder="Example: 10 pieces"
-        >
-      </div>
+      <!-- RIGHT -->
+      <div class="hero-visual">
 
-      <div class="form-group">
-        <label
-          for="sellerPrice"
-          data-i18n="priceLabel"
-        >
-          Expected Price
-        </label>
+        <div class="image-card">
 
-        <input
-          type="number"
-          id="sellerPrice"
-          placeholder="Enter price"
-        >
-      </div>
-
-      <div class="form-group">
-        <label
-          for="sellerLocation"
-          data-i18n="locationLabel"
-        >
-          Location
-        </label>
-
-        <input
-          type="text"
-          id="sellerLocation"
-          placeholder="Enter your location"
-        >
-      </div>
-
-      <div class="form-buttons">
-        <button
-          class="btn primary"
-          type="button"
-          onclick="generateCatalog()"
-          data-i18n="generateButton"
-        >
-          Generate AI Catalog
-        </button>
-
-        <button
-          class="btn secondary"
-          type="button"
-          onclick="publishProduct()"
-          data-i18n="publishButton"
-        >
-          Publish Product
-        </button>
-      </div>
-
-    </div>
-
-
-    <!-- AI Catalog Result -->
-
-    <div
-      class="catalog-result"
-      id="catalogResult"
-      style="display: none;"
-    >
-
-      <div class="catalog-image">
-        <img
-          id="catalogImage"
-          src="images/craft1.jpg"
-          alt="Catalog product"
-        >
-      </div>
-
-      <div class="catalog-content">
-        <span class="eyebrow" data-i18n="catalogEyebrow">
-          AI Generated Catalog
-        </span>
-
-        <h3 id="catalogName">
-          Handmade Product
-        </h3>
-
-        <p id="catalogDescription">
-          Product description will appear here.
-        </p>
-
-        <p>
-          <strong data-i18n="categoryText">
-            Category:
-          </strong>
-          <span id="catalogCategory">-</span>
-        </p>
-
-        <p>
-          <strong data-i18n="tagsText">
-            Tags:
-          </strong>
-          <span id="catalogTags">-</span>
-        </p>
-
-        <p>
-          <strong data-i18n="quantityText">
-            Quantity:
-          </strong>
-          <span id="catalogQuantity">-</span>
-        </p>
-
-        <p>
-          <strong data-i18n="priceText">
-            Price:
-          </strong>
-          <span id="catalogPrice">-</span>
-        </p>
-
-        <p>
-          <strong data-i18n="locationText">
-            Location:
-          </strong>
-          <span id="catalogLocation">-</span>
-        </p>
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       BUYER SECTION
-  ========================== -->
-
-  <section class="section buyer-section" id="buyer">
-
-    <div class="section-heading">
-      <span class="eyebrow" data-i18n="buyerEyebrow">
-        For Buyers
-      </span>
-
-      <h2 data-i18n="buyerTitle">
-        Find Products
-      </h2>
-
-      <p data-i18n="buyerDescription">
-        Search for handmade products using text or voice.
-      </p>
-    </div>
-
-    <div class="form-card">
-
-      <div class="form-group">
-        <label
-          for="buyerProduct"
-          data-i18n="wantedProductLabel"
-        >
-          Product You Want
-        </label>
-
-        <div class="voice-input">
-          <input
-            type="text"
-            id="buyerProduct"
-            placeholder="Enter or speak product name"
+          <img
+            src="images/artisan.jpg"
+            alt="Rural artisan"
           >
 
-          <button
-            type="button"
-            onclick="startBuyerVoice()"
-            data-i18n="speakButton"
-          >
-            🎤 Speak
-          </button>
+          <div class="verified seller">
+            <span>●</span>
+            AI Verified Seller
+          </div>
+
+          <div class="verified match">
+            <span>✓</span>
+            AI Buyer Match
+          </div>
+
         </div>
+
       </div>
 
-      <div class="form-group">
-        <label
-          for="buyerQuantity"
-          data-i18n="requiredQuantityLabel"
-        >
-          Required Quantity
-        </label>
-
-        <input
-          type="text"
-          id="buyerQuantity"
-          placeholder="Example: 2 pieces"
-        >
-      </div>
-
-      <div class="form-group">
-        <label
-          for="buyerBudget"
-          data-i18n="budgetLabel"
-        >
-          Your Budget
-        </label>
-
-        <input
-          type="number"
-          id="buyerBudget"
-          placeholder="Enter your budget"
-        >
-      </div>
-
-      <div class="form-group">
-        <label
-          for="buyerLocation"
-          data-i18n="buyerLocationLabel"
-        >
-          Delivery Location
-        </label>
-
-        <input
-          type="text"
-          id="buyerLocation"
-          placeholder="Enter delivery location"
-        >
-      </div>
-
-      <div class="form-group">
-        <label
-          for="buyerDate"
-          data-i18n="dateLabel"
-        >
-          Preferred Date
-        </label>
-
-        <input
-          type="date"
-          id="buyerDate"
-        >
-      </div>
-
-      <button
-        class="btn primary"
-        type="button"
-        onclick="findAIMatches()"
-        data-i18n="findMatchButton"
-      >
-        Find AI Matches
-      </button>
-
-    </div>
+    </section>
 
 
-    <!-- Empty Match -->
 
-    <div
-      class="match-empty"
-      id="matchEmpty"
-    >
-      <p data-i18n="matchEmptyText">
-        Search for a product to see AI matches.
-      </p>
-    </div>
+    <!-- ================= HOW IT WORKS ================= -->
+    <section class="how-it-works">
 
+      <div class="section-heading">
 
-    <!-- Match Card -->
+        <h2>How it works</h2>
 
-    <div
-      class="match-card"
-      id="matchCard"
-      style="display: none;"
-    >
-
-      <div class="match-image">
-        <img
-          id="matchedProductImage"
-          src="images/craft1.jpg"
-          alt="Matched product"
-        >
-      </div>
-
-      <div class="match-content">
-        <span class="eyebrow" data-i18n="matchEyebrow">
-          AI Match Found
-        </span>
-
-        <h3 id="matchedProductName">
-          Product Name
-        </h3>
-
-        <p id="matchedProductDescription">
-          Product description will appear here.
+        <p>
+          Photo & voice in. AI verified order out.
         </p>
 
-        <div id="matchedProductDetails"></div>
+      </div>
 
-        <button
-          class="btn primary"
-          type="button"
-          onclick="requestToBuy()"
-          data-i18n="requestButton"
-        >
-          Request to Buy
+
+      <div class="process-card">
+
+        <div class="process-step">
+
+          <div class="step-icon">📷</div>
+
+          <span>Photo + Voice</span>
+
+        </div>
+
+        <div class="arrow">→</div>
+
+
+        <div class="process-step">
+
+          <div class="step-icon">🤖</div>
+
+          <span>AI Analysis</span>
+
+        </div>
+
+        <div class="arrow">→</div>
+
+
+        <div class="process-step">
+
+          <div class="step-icon">📦</div>
+
+          <span>Smart Catalog</span>
+
+        </div>
+
+        <div class="arrow">→</div>
+
+
+        <div class="process-step">
+
+          <div class="step-icon">🎯</div>
+
+          <span>Right Buyer</span>
+
+        </div>
+
+        <div class="arrow">→</div>
+
+
+        <div class="process-step">
+
+          <div class="step-icon">✅</div>
+
+          <span>Verified Order</span>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- ================= STATS ================= -->
+
+      <div class="stats">
+
+        <div class="stat-card">
+          <strong>12,400+</strong>
+          <span>Rural producers</span>
+        </div>
+
+        <div class="stat-card">
+          <strong>₹4.2Cr</strong>
+          <span>Orders linked</span>
+        </div>
+
+        <div class="stat-card">
+          <strong>7 langs</strong>
+          <span>Voice support</span>
+        </div>
+
+        <div class="stat-card">
+          <strong>98%</strong>
+          <span>Verified delivery</span>
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ================= FEATURED CRAFTS ================= -->
+
+    <section class="featured" id="buy">
+
+      <div class="section-heading">
+
+        <h2>Featured Crafts</h2>
+
+        <p>
+          Handmade with care, matched with AI.
+        </p>
+
+      </div>
+
+
+      <div class="craft-grid">
+
+        <div class="craft-card">
+
+          <img
+            src="images/craft1.jpg"
+            alt="Handloom craft"
+          >
+
+          <div class="craft-info">
+
+            <h3>Handwoven Cotton Saree</h3>
+
+            <p>Traditional handloom craft</p>
+
+            <div class="craft-bottom">
+
+              <span>₹2,000</span>
+
+              <button>View</button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="craft-card">
+
+          <img
+            src="images/craft2.jpg"
+            alt="Handmade craft"
+          >
+
+          <div class="craft-info">
+
+            <h3>Handmade Basket</h3>
+
+            <p>Natural artisan craft</p>
+
+            <div class="craft-bottom">
+
+              <span>₹650</span>
+
+              <button>View</button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="craft-card">
+
+          <img
+            src="images/craft3.jpg"
+            alt="Traditional craft"
+          >
+
+          <div class="craft-info">
+
+            <h3>Traditional Craft</h3>
+
+            <p>Made by rural artisans</p>
+
+            <div class="craft-bottom">
+
+              <span>₹1,200</span>
+
+              <button>View</button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ================= SELL ================= -->
+
+    <section class="simple-section" id="sell">
+
+      <div>
+
+        <span class="small-label">FOR RURAL PRODUCERS</span>
+
+        <h2>Sell your products easily</h2>
+
+        <p>
+          Upload a product photo and describe it using your voice.
+          AgriCraft Connect helps create a smart catalog and find
+          suitable buyers.
+        </p>
+
+        <button class="btn primary" onclick="startSelling()">
+          Start Selling
         </button>
+
       </div>
 
-    </div>
-
-  </section>
+    </section>
 
 
-  <!-- =========================
-       MY ORDERS SECTION
-  ========================== -->
 
-  <section class="section orders-section" id="orders">
+    <!-- ================= ORDERS ================= -->
 
-    <div class="section-heading">
-      <span class="eyebrow" data-i18n="ordersEyebrow">
-        Track Your Requests
-      </span>
+    <section class="simple-section orders-section" id="orders">
 
-      <h2 data-i18n="ordersTitle">
-        My Orders
-      </h2>
+      <div>
 
-      <p data-i18n="ordersDescription">
-        View and manage your product requests.
-      </p>
-    </div>
+        <span class="small-label">MY ORDERS</span>
 
-    <div id="orderOutput">
-      <div class="empty-order">
-        <h3 data-i18n="noOrdersTitle">
-          No orders yet
-        </h3>
+        <h2>Your verified orders</h2>
 
-        <p data-i18n="noOrdersText">
-          Your requested products will appear here.
+        <p>
+          Track buyer requests, accepted orders and verified
+          transactions in one place.
         </p>
+
+        <button class="btn secondary" onclick="viewOrders()">
+          View My Orders
+        </button>
+
       </div>
-    </div>
 
-  </section>
+    </section>
 
 
-  <!-- =========================
-       ABOUT SECTION
-  ========================== -->
 
-  <section class="section about-section" id="about">
+    <!-- ================= ABOUT ================= -->
 
-    <div class="section-heading">
-      <span class="eyebrow" data-i18n="aboutEyebrow">
-        Our Mission
-      </span>
+    <section class="about-section" id="about">
 
-      <h2 data-i18n="aboutTitle">
-        About AgriCraft Connect
+      <span class="small-label">ABOUT AGRICRAFT CONNECT</span>
+
+      <h2>
+        Connecting rural producers to the right market.
       </h2>
 
-      <p data-i18n="aboutDescription">
-        AgriCraft Connect helps rural producers reach buyers through
-        AI-powered cataloging, voice input, smart matching and digital orders.
+      <p>
+        AgriCraft Connect uses AI-assisted cataloging and
+        buyer–seller matching to reduce digital barriers
+        for rural producers.
       </p>
+
+    </section>
+
+  </main>
+
+
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer>
+
+    <div class="brand">
+      <div class="brand-icon">✦</div>
+      <span>AgriCraft Connect</span>
     </div>
 
-  </section>
+    <p>
+      AI-powered market linkage for rural producers.
+    </p>
+
+    <p class="copyright">
+      © 2026 AgriCraft Connect
+    </p>
+
+  </footer>
 
 
-  <!-- =========================
-       CONTACT SECTION
-  ========================== -->
-
-  <section class="section contact-section" id="contact">
-
-    <div class="section-heading">
-      <span class="eyebrow" data-i18n="contactEyebrow">
-        Need Help?
-      </span>
-
-      <h2 data-i18n="contactTitle">
-        Contact Us
-      </h2>
-
-      <p data-i18n="contactDescription">
-        Get in touch with the AgriCraft Connect team.
-      </p>
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       MODAL
-  ========================== -->
-
-  <div
-    class="modal-overlay"
-    id="modalOverlay"
-    style="display: none;"
-  >
-    <div class="modal-content" id="modalContent"></div>
-  </div>
-
-
-  <!-- JavaScript -->
   <script src="script.js"></script>
 
 </body>
