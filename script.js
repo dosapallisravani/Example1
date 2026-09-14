@@ -240,37 +240,90 @@ function startBuyerVoice() {
 }
 
 
-/* =========================================
-   AI BUYER MATCHING
-========================================= */
-
 function findAIMatches() {
+  const matchResults = document.getElementById("matchResults");
 
-  const matchResults =
-    document.getElementById("matchResults");
+  const productInput = document.getElementById("buyerProduct");
+  const quantityInput = document.getElementById("buyerQuantity");
+  const budgetInput = document.getElementById("buyerBudget");
+  const locationInput = document.getElementById("buyerLocation");
 
-  const product =
-    document.getElementById("buyerProduct").value.trim();
-
-  const quantity =
-    document.getElementById("buyerQuantity").value;
-
-  const budget =
-    document.getElementById("buyerBudget").value.trim();
-
-  const location =
-    document.getElementById("buyerLocation").value.trim();
-
+  const product = productInput.value.trim().toLowerCase();
+  const quantity = quantityInput.value;
+  const budget = budgetInput.value;
+  const location = locationInput.value;
 
   if (!product) {
-
-    alert("Please enter the product you need.");
-
+    alert("Please enter a product name.");
     return;
   }
 
+  const productData = {
+    saree: {
+      name: "Handwoven Cotton Saree",
+      image: "images/craft1.jpg",
+      description: "Traditional cotton handloom saree made by a rural artisan.",
+      quantity: "20 pieces",
+      price: "₹2,000 / piece",
+      sellerLocation: "Eluru"
+    },
 
-  /* Save buyer requirement */
+    pottery: {
+      name: "Handmade Terracotta Pottery",
+      image: "images/craft2.jpg",
+      description: "Beautiful handmade terracotta pottery created by skilled artisans.",
+      quantity: "35 pieces",
+      price: "₹450 / piece",
+      sellerLocation: "Machilipatnam"
+    },
+
+    bamboo: {
+      name: "Bamboo Handicraft Basket",
+      image: "images/craft3.jpg",
+      description: "Eco-friendly bamboo basket made using traditional craftsmanship.",
+      quantity: "40 pieces",
+      price: "₹350 / piece",
+      sellerLocation: "Rajahmundry"
+    }
+  };
+
+  let selectedProduct;
+
+  if (
+    product.includes("saree") ||
+    product.includes("handloom") ||
+    product.includes("cotton")
+  ) {
+    selectedProduct = productData.saree;
+  } else if (
+    product.includes("pottery") ||
+    product.includes("terracotta") ||
+    product.includes("pot")
+  ) {
+    selectedProduct = productData.pottery;
+  } else if (
+    product.includes("bamboo") ||
+    product.includes("basket")
+  ) {
+    selectedProduct = productData.bamboo;
+  } else {
+    selectedProduct = productData.saree;
+  }
+
+  document.querySelector(".match-product-image img").src =
+    selectedProduct.image;
+
+  document.querySelector(".match-product-info h3").textContent =
+    selectedProduct.name;
+
+  document.querySelector(".match-product-info p").textContent =
+    selectedProduct.description;
+
+  document.querySelector(".match-details").innerHTML = `
+    <span>📦 ${selectedProduct.quantity}</span>
+    <span>${selectedProduct.price}</span>
+    <span>📍 ${selectedProduct.sellerLocation}</span>
+  `;
 
   localStorage.setItem(
     "agriCraftBuyerRequirement",
@@ -281,9 +334,6 @@ function findAIMatches() {
       location
     })
   );
-
-
-  /* Show AI matching */
 
   matchResults.style.display = "block";
 
