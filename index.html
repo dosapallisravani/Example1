@@ -19,7 +19,16 @@
       <span>AgriCraft Connect</span>
     </div>
 
-    <nav>
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-label="Open navigation menu"
+    >
+      ☰
+    </button>
+
+    <nav id="navMenu">
       <a href="#home" class="active">Home</a>
       <a href="#sell">Sell</a>
       <a href="#buy">Buy</a>
@@ -113,55 +122,36 @@
       <div class="process-card">
 
         <div class="process-step">
-
           <div class="step-icon">📷</div>
-
           <span>Photo + Voice</span>
-
         </div>
 
         <div class="arrow">→</div>
 
-
         <div class="process-step">
-
           <div class="step-icon">🤖</div>
-
           <span>AI Analysis</span>
-
         </div>
 
         <div class="arrow">→</div>
 
-
         <div class="process-step">
-
           <div class="step-icon">📦</div>
-
           <span>Smart Catalog</span>
-
         </div>
 
         <div class="arrow">→</div>
 
-
         <div class="process-step">
-
           <div class="step-icon">🎯</div>
-
           <span>Right Buyer</span>
-
         </div>
 
         <div class="arrow">→</div>
 
-
         <div class="process-step">
-
           <div class="step-icon">✅</div>
-
           <span>Verified Order</span>
-
         </div>
 
       </div>
@@ -169,7 +159,6 @@
 
 
       <!-- ================= STATS ================= -->
-
       <div class="stats">
 
         <div class="stat-card">
@@ -199,7 +188,6 @@
 
 
     <!-- ================= FEATURED CRAFTS ================= -->
-
     <section class="featured" id="buy">
 
       <div class="section-heading">
@@ -219,7 +207,7 @@
 
           <img
             src="images/craft1.jpg"
-            alt="Handloom craft"
+            alt="Handwoven cotton saree"
           >
 
           <div class="craft-info">
@@ -232,7 +220,17 @@
 
               <span>₹2,000</span>
 
-              <button>View</button>
+              <button
+                type="button"
+                onclick="selectCraft(
+                  'Handwoven Cotton Saree',
+                  'Traditional handloom craft',
+                  '2000',
+                  'images/craft1.jpg'
+                )"
+              >
+                View
+              </button>
 
             </div>
 
@@ -241,16 +239,17 @@
         </div>
 
 
+
         <div class="craft-card">
 
           <img
             src="images/craft2.jpg"
-            alt="Handmade craft"
+            alt="Handmade pottery"
           >
 
           <div class="craft-info">
 
-            <h3>Handmade Basket</h3>
+            <h3>Handmade Pottery</h3>
 
             <p>Natural artisan craft</p>
 
@@ -258,7 +257,17 @@
 
               <span>₹650</span>
 
-              <button>View</button>
+              <button
+                type="button"
+                onclick="selectCraft(
+                  'Handmade Pottery',
+                  'Natural artisan craft',
+                  '650',
+                  'images/craft2.jpg'
+                )"
+              >
+                View
+              </button>
 
             </div>
 
@@ -267,16 +276,17 @@
         </div>
 
 
+
         <div class="craft-card">
 
           <img
             src="images/craft3.jpg"
-            alt="Traditional craft"
+            alt="Bamboo basket"
           >
 
           <div class="craft-info">
 
-            <h3>Traditional Craft</h3>
+            <h3>Bamboo Basket</h3>
 
             <p>Made by rural artisans</p>
 
@@ -284,7 +294,17 @@
 
               <span>₹1,200</span>
 
-              <button>View</button>
+              <button
+                type="button"
+                onclick="selectCraft(
+                  'Bamboo Basket',
+                  'Made by rural artisans',
+                  '1200',
+                  'images/craft3.jpg'
+                )"
+              >
+                View
+              </button>
 
             </div>
 
@@ -294,12 +314,132 @@
 
       </div>
 
+
+
+      <!-- ================= BUYER AREA ================= -->
+      <div class="interaction-panel" id="buyerPanel">
+
+        <div class="section-heading">
+          <h2>Find the right product</h2>
+          <p>Search products using text or voice.</p>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="buyerProduct">Product name</label>
+            <input
+              type="text"
+              id="buyerProduct"
+              placeholder="Example: saree, pottery, basket"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="buyerQuantity">Quantity</label>
+            <input
+              type="number"
+              id="buyerQuantity"
+              min="1"
+              placeholder="Enter quantity"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="buyerBudget">Your budget</label>
+            <input
+              type="number"
+              id="buyerBudget"
+              placeholder="Enter budget"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="buyerLocation">Delivery location</label>
+            <input
+              type="text"
+              id="buyerLocation"
+              placeholder="Example: Eluru"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="buyerDate">Required date</label>
+            <input
+              type="date"
+              id="buyerDate"
+            >
+          </div>
+
+        </div>
+
+        <div class="action-buttons">
+
+          <button
+            type="button"
+            class="btn secondary"
+            onclick="startBuyerVoice()"
+          >
+            🎤 Speak
+          </button>
+
+          <button
+            type="button"
+            class="btn primary"
+            onclick="findAIMatches()"
+          >
+            Find AI Matches
+          </button>
+
+        </div>
+
+        <p id="buyerVoiceStatus" class="voice-status"></p>
+
+
+        <!-- MATCH RESULT -->
+        <div id="matchEmpty" class="result-empty">
+          <p>Search for a product to see matching crafts.</p>
+        </div>
+
+        <div id="matchCard" class="match-card" hidden>
+
+          <img
+            id="matchedProductImage"
+            src=""
+            alt="Matched product"
+          >
+
+          <div class="match-details">
+
+            <span class="small-label">AI MATCH FOUND</span>
+
+            <h3 id="matchedProductName"></h3>
+
+            <p id="matchedProductDescription"></p>
+
+            <p id="matchedProductDetails"></p>
+
+            <button
+              type="button"
+              class="btn primary"
+              onclick="requestToBuy()"
+            >
+              Request to Buy
+            </button>
+
+          </div>
+
+        </div>
+
+        <p id="buyerMessage" class="form-message"></p>
+
+      </div>
+
     </section>
 
 
 
     <!-- ================= SELL ================= -->
-
     <section class="simple-section" id="sell">
 
       <div>
@@ -314,7 +454,11 @@
           suitable buyers.
         </p>
 
-        <button class="btn primary" onclick="startSelling()">
+        <button
+          class="btn primary"
+          type="button"
+          onclick="startSelling()"
+        >
           Start Selling
         </button>
 
@@ -324,8 +468,198 @@
 
 
 
-    <!-- ================= ORDERS ================= -->
+    <!-- ================= SELLER FORM ================= -->
+    <section class="seller-panel" id="sellerForm">
 
+      <div class="section-heading">
+
+        <span class="small-label">SELLER WORKSPACE</span>
+
+        <h2>Create your smart catalog</h2>
+
+        <p>
+          Add product details manually or use the voice demo.
+        </p>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group full-width">
+
+          <label for="productImage">Product photo</label>
+
+          <input
+            type="file"
+            id="productImage"
+            accept="image/*"
+            onchange="previewProductImage(event)"
+          >
+
+          <div id="imagePreview" class="image-preview">
+            <span id="uploadPlaceholder">
+              Upload a product image
+            </span>
+
+            <img
+              id="uploadedImage"
+              src=""
+              alt="Uploaded product preview"
+              hidden
+            >
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="sellerProductName">Product name</label>
+
+          <input
+            type="text"
+            id="sellerProductName"
+            placeholder="Example: Cotton Saree"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="sellerQuantity">Quantity</label>
+
+          <input
+            type="number"
+            id="sellerQuantity"
+            min="1"
+            placeholder="Example: 10"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="sellerPrice">Expected price</label>
+
+          <input
+            type="number"
+            id="sellerPrice"
+            placeholder="Example: 2000"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="sellerLocation">Location</label>
+
+          <input
+            type="text"
+            id="sellerLocation"
+            placeholder="Example: Eluru"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="action-buttons">
+
+        <button
+          type="button"
+          class="btn secondary"
+          onclick="startSellerVoice()"
+        >
+          🎤 Describe by Voice
+        </button>
+
+        <button
+          type="button"
+          class="btn primary"
+          onclick="generateCatalog()"
+        >
+          Generate Smart Catalog
+        </button>
+
+      </div>
+
+      <p id="sellerVoiceStatus" class="voice-status"></p>
+
+
+      <!-- CATALOG RESULT -->
+      <div id="catalogResult" class="catalog-result" hidden>
+
+        <div class="catalog-image-box">
+
+          <img
+            id="catalogImage"
+            src=""
+            alt="Catalog product"
+          >
+
+        </div>
+
+        <div class="catalog-content">
+
+          <span class="small-label">AI GENERATED CATALOG</span>
+
+          <h3 id="catalogName"></h3>
+
+          <p id="catalogDescription"></p>
+
+          <div class="catalog-info">
+
+            <p>
+              <strong>Category:</strong>
+              <span id="catalogCategory"></span>
+            </p>
+
+            <p>
+              <strong>Tags:</strong>
+              <span id="catalogTags"></span>
+            </p>
+
+            <p>
+              <strong>Quantity:</strong>
+              <span id="catalogQuantity"></span>
+            </p>
+
+            <p>
+              <strong>Price:</strong>
+              ₹<span id="catalogPrice"></span>
+            </p>
+
+            <p>
+              <strong>Location:</strong>
+              <span id="catalogLocation"></span>
+            </p>
+
+          </div>
+
+          <button
+            type="button"
+            class="btn primary"
+            onclick="publishProduct()"
+          >
+            Publish Product
+          </button>
+
+        </div>
+
+      </div>
+
+      <p id="sellerMessage" class="form-message"></p>
+
+    </section>
+
+
+
+    <!-- ================= ORDERS ================= -->
     <section class="simple-section orders-section" id="orders">
 
       <div>
@@ -339,9 +673,22 @@
           transactions in one place.
         </p>
 
-        <button class="btn secondary" onclick="viewOrders()">
+        <button
+          class="btn secondary"
+          type="button"
+          onclick="viewOrders()"
+        >
           View My Orders
         </button>
+
+      </div>
+
+
+      <div id="orderOutput" class="order-output">
+
+        <p class="empty-order">
+          No orders yet. Your requested products will appear here.
+        </p>
 
       </div>
 
@@ -350,7 +697,6 @@
 
 
     <!-- ================= ABOUT ================= -->
-
     <section class="about-section" id="about">
 
       <span class="small-label">ABOUT AGRICRAFT CONNECT</span>
@@ -372,7 +718,6 @@
 
 
   <!-- ================= FOOTER ================= -->
-
   <footer>
 
     <div class="brand">
@@ -394,4 +739,4 @@
   <script src="script.js"></script>
 
 </body>
-</html>
+</html>>
