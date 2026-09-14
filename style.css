@@ -1,1 +1,654 @@
+/* =========================
+   AGRICRAFT CONNECT
+   MAIN STYLES
+========================= */
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  background: #f8f5ed;
+  color: #30352d;
+  line-height: 1.6;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+  width: 100%;
+  padding: 25px 7%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f5ed;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #35402d;
+}
+
+.brand-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #718355;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.navbar nav {
+  display: flex;
+  gap: 32px;
+}
+
+.navbar nav a {
+  text-decoration: none;
+  color: #4d5149;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.navbar nav a:hover,
+.navbar nav a.active {
+  color: #718355;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+  min-height: 650px;
+  padding: 70px 8% 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 70px;
+}
+
+.hero-content {
+  width: 52%;
+}
+
+.prototype-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 30px;
+  background: #fffdf8;
+  border: 1px solid #dedbd0;
+  color: #555a50;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  margin-bottom: 25px;
+}
+
+.prototype-badge span {
+  color: #718355;
+}
+
+.hero h1 {
+  font-size: clamp(48px, 5vw, 78px);
+  line-height: 1.02;
+  font-weight: 500;
+  letter-spacing: -2px;
+  color: #30352d;
+  margin-bottom: 28px;
+}
+
+.hero h1 span {
+  display: block;
+  color: #718355;
+}
+
+.hero p {
+  max-width: 570px;
+  font-family: Arial, sans-serif;
+  color: #686b64;
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  padding: 14px 25px;
+  border-radius: 30px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.btn.primary {
+  background: #9aaf78;
+  color: white;
+}
+
+.btn.primary:hover {
+  background: #718355;
+  transform: translateY(-2px);
+}
+
+.btn.secondary {
+  background: #fffdf8;
+  color: #3f433c;
+  border: 1px solid #dedbd0;
+}
+
+.btn.secondary:hover {
+  border-color: #9aaf78;
+  color: #718355;
+}
+
+/* =========================
+   HERO IMAGE
+========================= */
+
+.hero-visual {
+  width: 43%;
+  display: flex;
+  justify-content: center;
+}
+
+.image-card {
+  width: 100%;
+  max-width: 500px;
+  height: 430px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  background: #e8dfd0;
+  box-shadow: 0 20px 50px rgba(70, 65, 50, 0.12);
+}
+
+.image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Image badges */
+
+.verified {
+  position: absolute;
+  background: rgba(255, 253, 248, 0.95);
+  border: 1px solid #e1ded4;
+  padding: 9px 14px;
+  border-radius: 25px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: #42463e;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.verified span {
+  color: #718355;
+  margin-right: 5px;
+}
+
+.verified.seller {
+  top: 22px;
+  left: -15px;
+}
+
+.verified.match {
+  right: -15px;
+  bottom: 25px;
+}
+
+/* =========================
+   SECTION COMMON
+========================= */
+
+section {
+  padding: 90px 8%;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.section-heading h2 {
+  font-size: 42px;
+  font-weight: 500;
+  color: #30352d;
+  margin-bottom: 8px;
+}
+
+.section-heading p {
+  font-family: Arial, sans-serif;
+  color: #777970;
+}
+
+/* =========================
+   HOW IT WORKS
+========================= */
+
+.how-it-works {
+  background: #f1eee5;
+}
+
+.process-card {
+  max-width: 1150px;
+  margin: auto;
+  padding: 28px 35px;
+  background: #fffdf8;
+  border: 1px solid #dedbd0;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.process-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 100px;
+}
+
+.step-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #e5e9d5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 23px;
+  margin-bottom: 9px;
+}
+
+.process-step span {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4d5149;
+}
+
+.arrow {
+  font-size: 24px;
+  color: #9aaf78;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats {
+  max-width: 1150px;
+  margin: 35px auto 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.stat-card {
+  background: #fffdf8;
+  border: 1px solid #dedbd0;
+  border-radius: 20px;
+  padding: 24px 15px;
+  text-align: center;
+}
+
+.stat-card strong {
+  display: block;
+  font-family: Georgia, serif;
+  font-size: 27px;
+  color: #718355;
+}
+
+.stat-card span {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: #777970;
+}
+
+/* =========================
+   FEATURED CRAFTS
+========================= */
+
+.featured {
+  background: #f8f5ed;
+}
+
+.craft-grid {
+  max-width: 1150px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.craft-card {
+  overflow: hidden;
+  background: #fffdf8;
+  border: 1px solid #dedbd0;
+  border-radius: 24px;
+  transition: 0.3s ease;
+}
+
+.craft-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(70, 65, 50, 0.1);
+}
+
+.craft-card img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  display: block;
+}
+
+.craft-info {
+  padding: 20px;
+}
+
+.craft-info h3 {
+  font-size: 21px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.craft-info p {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  color: #777970;
+  margin-bottom: 18px;
+}
+
+.craft-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.craft-bottom span {
+  color: #718355;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+}
+
+.craft-bottom button {
+  border: 1px solid #cfd4c2;
+  background: #f4f5eb;
+  color: #526043;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+/* =========================
+   SIMPLE SECTIONS
+========================= */
+
+.simple-section {
+  background: #e9eddf;
+  text-align: center;
+}
+
+.simple-section > div {
+  max-width: 700px;
+  margin: auto;
+}
+
+.small-label {
+  font-family: Arial, sans-serif;
+  color: #718355;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+.simple-section h2,
+.about-section h2 {
+  font-size: 42px;
+  font-weight: 500;
+  margin: 12px 0 18px;
+}
+
+.simple-section p,
+.about-section p {
+  font-family: Arial, sans-serif;
+  color: #686b64;
+  margin-bottom: 25px;
+}
+
+/* =========================
+   ORDERS
+========================= */
+
+.orders-section {
+  background: #f5eee5;
+}
+
+/* =========================
+   ABOUT
+========================= */
+
+.about-section {
+  background: #fffdf8;
+  text-align: center;
+}
+
+.about-section > * {
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.about-section p {
+  line-height: 1.8;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+  padding: 45px 8%;
+  background: #35402d;
+  color: #fffdf8;
+  text-align: center;
+}
+
+footer .brand {
+  justify-content: center;
+  color: #fffdf8;
+  margin-bottom: 12px;
+}
+
+footer .brand-icon {
+  background: #9aaf78;
+}
+
+footer p {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+footer .copyright {
+  margin-top: 18px;
+  font-size: 11px;
+  opacity: 0.55;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .navbar {
+    padding: 20px 5%;
+  }
+
+  .navbar nav {
+    gap: 15px;
+  }
+
+  .hero {
+    padding: 55px 6%;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-content,
+  .hero-visual {
+    width: 100%;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero h1 {
+    font-size: 52px;
+  }
+
+  .hero p {
+    max-width: 600px;
+  }
+
+  .hero-visual {
+    max-width: 520px;
+  }
+
+  .process-card {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .arrow {
+    display: none;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .craft-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .navbar {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .navbar nav {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero {
+    padding: 45px 5%;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+    letter-spacing: -1px;
+  }
+
+  .hero p {
+    font-size: 15px;
+  }
+
+  .image-card {
+    height: 330px;
+  }
+
+  .section-heading h2,
+  .simple-section h2,
+  .about-section h2 {
+    font-size: 34px;
+  }
+
+  .process-card {
+    padding: 25px 15px;
+    gap: 22px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 18px 8px;
+  }
+
+  .stat-card strong {
+    font-size: 21px;
+  }
+
+  .craft-grid {
+    grid-template-columns: 1fr;
+  }
+
+  section {
+    padding: 65px 5%;
+  }
+
+  .verified.seller {
+    left: 10px;
+  }
+
+  .verified.match {
+    right: 10px;
+  }
+}
