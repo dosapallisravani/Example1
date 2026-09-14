@@ -1,647 +1,566 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AgriCraft Connect</title>
+  <title>AgriCraft Connect</title>
 
-    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <!-- ================= NAVBAR ================= -->
+  <!-- ================= NAVBAR ================= -->
+  <header class="navbar">
+    <div class="nav-container">
 
-    <nav class="navbar">
-        <div class="nav-container">
+      <a href="#" class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+        <span class="logo-mark">🌾</span>
+        <span class="logo-text">AgriCraft <strong>Connect</strong></span>
+      </a>
 
-            <a href="#home" class="logo">
-                <span class="logo-mark">A</span>
-                <span class="logo-text">
-                    AgriCraft <b>Connect</b>
-                </span>
-            </a>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">
+        ☰
+      </button>
 
-            <button class="menu-toggle" id="menuToggle" type="button">
-                ☰
-            </button>
+      <nav class="nav-links" id="navLinks">
+        <a href="#home" onclick="closeMenu()">Home</a>
+        <a href="#seller" onclick="closeMenu()">Seller</a>
+        <a href="#buyer" onclick="closeMenu()">Buyer</a>
+        <a href="#orders" onclick="closeMenu()">Orders</a>
+      </nav>
 
-            <div class="nav-links" id="navLinks">
-                <a href="#home">Home</a>
-                <a href="#seller">Sell</a>
-                <a href="#buyer">Buy</a>
-                <a href="#orders">My Orders</a>
-                <a href="#about">About</a>
-            </div>
+    </div>
+  </header>
 
-        </div>
-    </nav>
 
+  <!-- ================= HERO SECTION ================= -->
+  <section class="hero-section" id="home">
 
-    <!-- ================= HOME ================= -->
+    <div class="hero-content">
 
-    <main>
+      <span class="hero-badge">AI-Powered Rural Marketplace</span>
 
-        <section class="hero" id="home">
-            <div class="container hero-content">
+      <h1>
+        Connecting Rural Talent
+        <span>With Global Opportunities</span>
+      </h1>
 
-                <div class="hero-text">
-                    <span class="badge">
-                        Smart India Hackathon Prototype
-                    </span>
+      <p>
+        A smart platform that helps rural artisans and producers
+        showcase their products, find buyers, and grow their income
+        using AI-powered tools.
+      </p>
 
-                    <h1>
-                        From Local Craft<br>
-                        to the <span>Right Buyer</span>
-                    </h1>
+      <div class="hero-buttons">
+        <button class="primary-btn" onclick="goToSeller()">
+          Sell Your Product
+        </button>
 
-                    <p>
-                        AI-powered market linkage for rural producers.
-                        List with a photo and your voice — we do the rest.
-                    </p>
+        <button class="secondary-btn" onclick="goToBuyer()">
+          Find Products
+        </button>
+      </div>
 
-                    <div class="hero-buttons">
-                        <button class="btn primary" onclick="goToSeller()">
-                            Sell Your Product
-                        </button>
+      <div class="hero-features">
+        <span>✓ Local Language Support</span>
+        <span>✓ AI Smart Catalog</span>
+        <span>✓ Verified Buyers</span>
+      </div>
 
-                        <button class="btn secondary" onclick="goToBuyer()">
-                            Find Products
-                        </button>
-                    </div>
+    </div>
 
-                    <div class="hero-mini-info">
-                        <span>📸 Photo-based listing</span>
-                        <span>🎙️ Voice-friendly</span>
-                        <span>🤝 Smart matching</span>
-                    </div>
-                </div>
+    <div class="hero-image-container">
+      <img
+        src="images/artisan.jpg"
+        alt="Rural artisan"
+        class="hero-image"
+      >
+    </div>
 
-                <div class="hero-visual">
-                    <div class="hero-image-card">
-                        <img src="images/artisan.jpg" alt="Rural Artisan">
+  </section>
 
-                        <div class="floating-card seller-badge">
-                            <span class="small-icon">✓</span>
-                            <div>
-                                <strong>AI Verified Seller</strong>
-                                <small>Trusted producer</small>
-                            </div>
-                        </div>
 
-                        <div class="floating-card buyer-badge">
-                            <span class="small-icon">↗</span>
-                            <div>
-                                <strong>AI Buyer Match</strong>
-                                <small>Right market found</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <!-- ================= SELLER SECTION ================= -->
+  <section class="main-section" id="seller">
 
-            </div>
-        </section>
+    <div class="section-heading">
+      <span class="section-label">FOR SELLERS</span>
 
+      <h2>Showcase Your Product</h2>
 
-        <!-- ================= HOW IT WORKS ================= -->
-
-        <section class="how-section">
-            <div class="container">
-
-                <div class="section-heading">
-                    <span class="eyebrow">SIMPLE PROCESS</span>
-                    <h2>How AgriCraft Connect Works</h2>
-                    <p>
-                        A simple digital journey from product creation to verified order.
-                    </p>
-                </div>
-
-                <div class="steps-grid">
-
-                    <div class="step-card">
-                        <div class="step-number">01</div>
-                        <div class="step-icon">📸</div>
-                        <h3>Photo + Voice</h3>
-                        <p>
-                            Upload a product photo and explain details in your local language.
-                        </p>
-                    </div>
-
-                    <div class="step-card">
-                        <div class="step-number">02</div>
-                        <div class="step-icon">🤖</div>
-                        <h3>AI Analysis</h3>
-                        <p>
-                            AI understands the image and voice information.
-                        </p>
-                    </div>
-
-                    <div class="step-card">
-                        <div class="step-number">03</div>
-                        <div class="step-icon">🗂️</div>
-                        <h3>Smart Catalog</h3>
-                        <p>
-                            Product name, category, tags and price insight are generated.
-                        </p>
-                    </div>
-
-                    <div class="step-card">
-                        <div class="step-number">04</div>
-                        <div class="step-icon">🤝</div>
-                        <h3>Right Buyer</h3>
-                        <p>
-                            AI matches products with suitable buyer requirements.
-                        </p>
-                    </div>
-
-                    <div class="step-card">
-                        <div class="step-number">05</div>
-                        <div class="step-icon">✅</div>
-                        <h3>Verified Order</h3>
-                        <p>
-                            Buyer and seller confirm the order digitally.
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ================= SELLER SECTION ================= -->
-
-        <section class="dashboard-section" id="seller">
-            <div class="container">
-
-                <div class="section-heading left-heading">
-                    <span class="eyebrow">FOR PRODUCERS</span>
-                    <h2>Sell Your Product</h2>
-                    <p>
-                        Create a smart product listing using a photo and voice.
-                    </p>
-                </div>
-
-                <div class="seller-layout">
-
-                    <div class="panel-card">
-
-                        <div class="panel-title">
-                            <div>
-                                <span class="panel-label">STEP 1</span>
-                                <h3>Add Product Details</h3>
-                            </div>
-                            <span class="panel-icon">🧑‍🌾</span>
-                        </div>
-
-                        <label class="field-label">Product Photo</label>
-
-                        <div class="upload-area" id="uploadArea">
-                            <input
-                                type="file"
-                                id="productImage"
-                                accept="image/*"
-                            >
-
-                            <div id="uploadPlaceholder">
-                                <div class="upload-icon">📷</div>
-                                <h4>Upload Product Photo</h4>
-                                <p>Click here or choose an image</p>
-                            </div>
-
-                            <img
-                                id="imagePreview"
-                                class="image-preview"
-                                alt="Product Preview"
-                            >
-                        </div>
-
-                        <label class="field-label">Product Name</label>
-                        <input
-                            type="text"
-                            id="sellerProductName"
-                            placeholder="Example: Cotton Handloom Saree"
-                        >
-
-                        <div class="two-column">
-                            <div>
-                                <label class="field-label">Quantity</label>
-                                <input
-                                    type="number"
-                                    id="sellerQuantity"
-                                    placeholder="20"
-                                >
-                            </div>
-
-                            <div>
-                                <label class="field-label">Expected Price</label>
-                                <input
-                                    type="number"
-                                    id="sellerPrice"
-                                    placeholder="2000"
-                                >
-                            </div>
-                        </div>
-
-                        <label class="field-label">Location</label>
-                        <input
-                            type="text"
-                            id="sellerLocation"
-                            placeholder="Example: Eluru"
-                        >
-
-                        <button
-                            class="voice-button"
-                            type="button"
-                            onclick="startSellerVoice()"
-                        >
-                            🎙️ Speak Product Details
-                        </button>
-
-                        <p class="voice-status" id="sellerVoiceStatus">
-                            You can use voice instead of typing.
-                        </p>
-
-                        <button
-                            class="btn primary full-btn"
-                            type="button"
-                            onclick="generateCatalog()"
-                        >
-                            Generate Smart Catalog
-                        </button>
-
-                    </div>
-
-
-                    <div class="panel-card ai-panel">
-
-                        <div class="panel-title">
-                            <div>
-                                <span class="panel-label">STEP 2</span>
-                                <h3>AgriCraft AI</h3>
-                            </div>
-                            <span class="panel-icon">✨</span>
-                        </div>
-
-                        <div class="ai-intro">
-                            <div class="ai-symbol">✦</div>
-                            <div>
-                                <h4>AI-assisted catalog creation</h4>
-                                <p>
-                                    Your photo and voice are converted into
-                                    clear product information.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="ai-processing" id="aiProcessing">
-                            <div class="loader"></div>
-                            <span>AI is analysing your product...</span>
-                        </div>
-
-                        <div class="catalog-result" id="catalogResult">
-
-                            <div class="catalog-image-wrap">
-                                <img
-                                    id="catalogImage"
-                                    src="images/craft1.jpg"
-                                    alt="Catalog Product"
-                                >
-                            </div>
-
-                            <div class="catalog-content">
-                                <span class="verified-tag">
-                                    ✓ AI Generated Catalog
-                                </span>
-
-                                <h3 id="catalogName">
-                                    Handwoven Cotton Saree
-                                </h3>
-
-                                <p id="catalogDescription">
-                                    Traditional handloom product created
-                                    by a rural producer.
-                                </p>
-
-                                <div class="catalog-details">
-                                    <span id="catalogCategory">Category: Handicraft</span>
-                                    <span id="catalogTags">Tags: Handmade, Local</span>
-                                    <span id="catalogQuantity">Quantity: 20</span>
-                                    <span id="catalogPrice">Price: ₹2,000</span>
-                                    <span id="catalogLocation">Location: Eluru</span>
-                                </div>
-
-                                <button
-                                    class="btn primary full-btn"
-                                    type="button"
-                                    onclick="publishProduct()"
-                                >
-                                    Publish Product
-                                </button>
-                            </div>
-
-                        </div>
-
-                        <p class="empty-message" id="catalogEmpty">
-                            Generate your smart catalog to see the AI result here.
-                        </p>
-
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ================= BUYER SECTION ================= -->
-
-        <section class="buyer-section" id="buyer">
-            <div class="container">
-
-                <div class="section-heading">
-                    <span class="eyebrow">FOR BUYERS</span>
-                    <h2>Find Products Easily</h2>
-                    <p>
-                        Tell us what you need. AI will find suitable rural producers.
-                    </p>
-                </div>
-
-                <div class="buyer-layout">
-
-                    <div class="panel-card buyer-form-card">
-
-                        <div class="panel-title">
-                            <div>
-                                <span class="panel-label">BUYER REQUIREMENT</span>
-                                <h3>What are you looking for?</h3>
-                            </div>
-                            <span class="panel-icon">🏪</span>
-                        </div>
-
-                        <label class="field-label">Product Needed</label>
-                        <input
-                            type="text"
-                            id="buyerProduct"
-                            placeholder="Example: Cotton Handloom Sarees"
-                        >
-
-                        <div class="two-column">
-                            <div>
-                                <label class="field-label">Quantity</label>
-                                <input
-                                    type="number"
-                                    id="buyerQuantity"
-                                    placeholder="50"
-                                >
-                            </div>
-
-                            <div>
-                                <label class="field-label">Budget Per Piece</label>
-                                <input
-                                    type="number"
-                                    id="buyerBudget"
-                                    placeholder="2200"
-                                >
-                            </div>
-                        </div>
-
-                        <label class="field-label">Delivery Location</label>
-                        <input
-                            type="text"
-                            id="buyerLocation"
-                            placeholder="Example: Hyderabad"
-                        >
-
-                        <label class="field-label">Required By</label>
-                        <input
-                            type="date"
-                            id="buyerDate"
-                        >
-
-                        <button
-                            class="voice-button"
-                            type="button"
-                            onclick="startBuyerVoice()"
-                        >
-                            🎙️ Speak Your Requirement
-                        </button>
-
-                        <p class="voice-status" id="buyerVoiceStatus">
-                            You can describe your requirement by voice.
-                        </p>
-
-                        <button
-                            class="btn primary full-btn"
-                            type="button"
-                            onclick="findAIMatches()"
-                        >
-                            Find AI Matches
-                        </button>
-
-                    </div>
-
-
-                    <div class="panel-card match-panel">
-
-                        <div class="panel-title">
-                            <div>
-                                <span class="panel-label">AI MATCHING</span>
-                                <h3>Suitable Products</h3>
-                            </div>
-                            <span class="panel-icon">🔎</span>
-                        </div>
-
-                        <div id="matchEmpty" class="empty-match">
-                            <div class="empty-match-icon">🤝</div>
-                            <h3>Find your right supplier</h3>
-                            <p>
-                                Enter your requirement and let AI discover
-                                suitable products.
-                            </p>
-                        </div>
-
-                        <div class="match-card" id="matchCard">
-
-                            <div class="match-product-image">
-                                <img
-                                    id="matchedProductImage"
-                                    src="images/craft1.jpg"
-                                    alt="Matched Product"
-                                >
-                            </div>
-
-                            <div class="match-product-info">
-
-                                <span class="verified-tag">
-                                    ✓ Verified Producer
-                                </span>
-
-                                <h3 id="matchedProductName">
-                                    Handwoven Cotton Saree
-                                </h3>
-
-                                <p id="matchedProductDescription">
-                                    Traditional handloom product from a rural artisan.
-                                </p>
-
-                                <div class="match-details" id="matchedProductDetails">
-                                    <span>📦 20 pieces</span>
-                                    <span>₹2,000 / piece</span>
-                                    <span>📍 Eluru</span>
-                                </div>
-
-                                <div class="match-factors">
-                                    <span>Product ✓</span>
-                                    <span>Budget ✓</span>
-                                    <span>Location ✓</span>
-                                </div>
-
-                                <button
-                                    class="btn primary full-btn"
-                                    type="button"
-                                    onclick="requestToBuy()"
-                                >
-                                    Request to Buy
-                                </button>
-
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ================= ORDERS SECTION ================= -->
-
-        <section class="orders-section" id="orders">
-            <div class="container">
-
-                <div class="section-heading left-heading">
-                    <span class="eyebrow">ORDER MANAGEMENT</span>
-                    <h2>My Orders</h2>
-                    <p>
-                        Track buyer requests and verified transactions.
-                    </p>
-                </div>
-
-                <div class="orders-grid">
-
-                    <div class="order-action-card">
-                        <div class="order-card-icon">📩</div>
-                        <h3>Buyer Requests</h3>
-                        <p>
-                            View requests received from interested buyers.
-                        </p>
-
-                        <button
-                            class="btn secondary full-btn"
-                            type="button"
-                            onclick="showOrderRequests()"
-                        >
-                            View Requests
-                        </button>
-                    </div>
-
-                    <div class="order-action-card">
-                        <div class="order-card-icon">🧾</div>
-                        <h3>Verified Order</h3>
-                        <p>
-                            View your confirmed digital order receipt.
-                        </p>
-
-                        <button
-                            class="btn secondary full-btn"
-                            type="button"
-                            onclick="showVerifiedOrder()"
-                        >
-                            View Receipt
-                        </button>
-                    </div>
-
-                </div>
-
-                <div class="order-output" id="orderOutput">
-                    <p>
-                        Your order information will appear here.
-                    </p>
-                </div>
-
-            </div>
-        </section>
-
-
-        <!-- ================= ABOUT ================= -->
-
-        <section class="about-section" id="about">
-            <div class="container about-content">
-
-                <div>
-                    <span class="eyebrow">ABOUT THE PROJECT</span>
-                    <h2>Technology with a Rural Purpose</h2>
-                </div>
-
-                <div>
-                    <p>
-                        AgriCraft Connect is an AI-powered market linkage
-                        prototype designed to help rural producers connect
-                        with suitable buyers through simple photo and
-                        voice-based interaction.
-                    </p>
-
-                    <p>
-                        Our goal is to reduce digital barriers, improve
-                        product discovery and support better market access.
-                    </p>
-                </div>
-
-            </div>
-        </section>
-
-    </main>
-
-
-    <!-- ================= FOOTER ================= -->
-
-    <footer>
-        <div class="container footer-content">
-            <div>
-                <a href="#home" class="footer-logo">
-                    <span class="logo-mark">A</span>
-                    AgriCraft Connect
-                </a>
-                <p>From local products to wider opportunities.</p>
-            </div>
-
-            <div class="footer-right">
-                <span>Smart India Hackathon 2026</span>
-                <span>PS ID: SIH26090</span>
-            </div>
-        </div>
-    </footer>
-
-
-    <!-- ================= MODAL ================= -->
-
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-box">
-
-            <button
-                class="modal-close"
-                type="button"
-                onclick="closeModal()"
-            >
-                ✕
-            </button>
-
-            <div id="modalContent"></div>
-
-        </div>
+      <p>
+        Upload your product details and let AI create a professional
+        catalog for buyers.
+      </p>
     </div>
 
 
-    <script src="script.js"></script>
+    <div class="panel seller-panel">
+
+      <div class="panel-title">
+        <div class="panel-icon">🧺</div>
+
+        <div>
+          <h3>Product Information</h3>
+          <p>Enter your product details below</p>
+        </div>
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group full-width">
+          <label class="field-label">Product Image</label>
+
+          <div class="upload-box" id="uploadPlaceholder">
+            <input
+              type="file"
+              id="productImage"
+              accept="image/*"
+              onchange="previewProductImage(event)"
+            >
+
+            <div class="upload-content">
+              <span class="upload-icon">📷</span>
+              <p>Click to upload product image</p>
+              <small>JPG, PNG or JPEG</small>
+            </div>
+
+            <img
+              id="imagePreview"
+              class="image-preview"
+              alt="Product preview"
+            >
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label class="field-label" for="sellerProductName">
+            Product Name
+          </label>
+
+          <input
+            type="text"
+            id="sellerProductName"
+            placeholder="Example: Handwoven Saree"
+          >
+        </div>
+
+
+        <div class="form-group">
+          <label class="field-label" for="sellerQuantity">
+            Available Quantity
+          </label>
+
+          <input
+            type="number"
+            id="sellerQuantity"
+            placeholder="Example: 20"
+          >
+        </div>
+
+
+        <div class="form-group">
+          <label class="field-label" for="sellerPrice">
+            Expected Price
+          </label>
+
+          <input
+            type="number"
+            id="sellerPrice"
+            placeholder="Example: 1500"
+          >
+        </div>
+
+
+        <div class="form-group">
+          <label class="field-label" for="sellerLocation">
+            Location
+          </label>
+
+          <input
+            type="text"
+            id="sellerLocation"
+            placeholder="Example: Eluru, Andhra Pradesh"
+          >
+        </div>
+
+      </div>
+
+
+      <div class="voice-area">
+        <button
+          class="voice-btn"
+          type="button"
+          onclick="startSellerVoice()"
+        >
+          🎤 Speak Product Details
+        </button>
+
+        <span id="sellerVoiceStatus">
+          You can use your voice to enter details
+        </span>
+      </div>
+
+
+      <button
+        class="primary-btn full-btn"
+        id="generateCatalog"
+        onclick="generateCatalog()"
+      >
+        ✨ Generate AI Catalog
+      </button>
+
+
+      <!-- AI GENERATED CATALOG -->
+      <div class="catalog-result" id="catalogResult" hidden>
+
+        <div class="result-heading">
+          <span>✨</span>
+          <h3>AI Generated Product Catalog</h3>
+        </div>
+
+        <div class="catalog-card">
+
+          <img
+            id="catalogProductImage"
+            src=""
+            alt="Generated product"
+          >
+
+          <div class="catalog-info">
+            <h3 id="catalogProductName">Product Name</h3>
+
+            <p id="catalogProductDescription">
+              Your AI-generated product description will appear here.
+            </p>
+
+            <div class="catalog-details">
+              <span id="catalogProductPrice">₹0</span>
+              <span id="catalogProductQuantity">0 items</span>
+              <span id="catalogProductLocation">Location</span>
+            </div>
+          </div>
+
+        </div>
+
+        <button
+          class="primary-btn"
+          onclick="publishProduct()"
+        >
+          Publish Product
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= BUYER SECTION ================= -->
+  <section class="main-section buyer-section" id="buyer">
+
+    <div class="section-heading">
+      <span class="section-label">FOR BUYERS</span>
+
+      <h2>Find Products Easily</h2>
+
+      <p>
+        Search for products using text or your preferred local language.
+      </p>
+    </div>
+
+
+    <div class="panel buyer-panel">
+
+      <div class="panel-title">
+        <div class="panel-icon">🛍️</div>
+
+        <div>
+          <h3>What Are You Looking For?</h3>
+          <p>Tell us your requirements</p>
+        </div>
+      </div>
+
+
+      <!-- LANGUAGE SELECTOR -->
+      <div class="language-selector">
+        <label class="field-label" for="languageSelect">
+          🌐 Select Your Language
+        </label>
+
+        <select id="languageSelect" onchange="changeLanguage()">
+          <option value="en-IN">English</option>
+          <option value="te-IN">తెలుగు</option>
+          <option value="hi-IN">हिंदी</option>
+          <option value="ta-IN">தமிழ்</option>
+          <option value="kn-IN">ಕನ್ನಡ</option>
+          <option value="ml-IN">മലയാളം</option>
+        </select>
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label class="field-label" for="buyerProduct">
+            Product You Need
+          </label>
+
+          <input
+            type="text"
+            id="buyerProduct"
+            placeholder="Example: Cotton Saree"
+          >
+        </div>
+
+
+        <div class="form-group">
+          <label class="field-label" for="buyerQuantity">
+            Required Quantity
+          </label>
+
+          <input
+            type="number"
+            id="buyerQuantity"
+            placeholder="Example: 5"
+          >
+        </div>
+
+
+        <div class="form-group">
+          <label class="field-label" for="buyerBudget">
+            Your Budget
+          </label>
+
+          <input
+            type="number"
+            id="buyerBudget"
+            placeholder="Example: 5000"
+          >
+        </div>
+
+
+        <div class="form-group">
+          <label class="field-label" for="buyerLocation">
+            Delivery Location
+          </label>
+
+          <input
+            type="text"
+            id="buyerLocation"
+            placeholder="Example: Hyderabad"
+          >
+        </div>
+
+
+        <div class="form-group full-width">
+          <label class="field-label" for="buyerDate">
+            Required Date
+          </label>
+
+          <input
+            type="date"
+            id="buyerDate"
+          >
+        </div>
+
+      </div>
+
+
+      <div class="voice-area">
+
+        <button
+          class="voice-btn"
+          type="button"
+          onclick="startBuyerVoice()"
+        >
+          🎤 Speak Your Requirement
+        </button>
+
+        <span id="buyerVoiceStatus">
+          Speak in your selected language
+        </span>
+
+      </div>
+
+
+      <button
+        class="primary-btn full-btn"
+        onclick="findAIMatches()"
+      >
+        🔍 Find AI Matches
+      </button>
+
+
+      <!-- AI MATCH EMPTY STATE -->
+      <div class="match-empty" id="matchEmpty">
+        <div class="empty-icon">🔎</div>
+
+        <h3>Ready to Find Your Match</h3>
+
+        <p>
+          Enter your requirements and click the button to discover
+          suitable products.
+        </p>
+      </div>
+
+
+      <!-- AI MATCH RESULT -->
+      <div class="match-card" id="matchCard" hidden>
+
+        <div class="result-heading">
+          <span>🤖</span>
+          <h3>AI Recommended Match</h3>
+        </div>
+
+        <div class="match-content">
+
+          <img
+            id="matchedProductImage"
+            src=""
+            alt="Matched product"
+          >
+
+          <div class="match-info">
+
+            <h3 id="matchedProductName">
+              Recommended Product
+            </h3>
+
+            <p id="matchedProductDescription">
+              Product description will appear here.
+            </p>
+
+            <div
+              class="matched-product-details"
+              id="matchedProductDetails"
+            >
+              Product details
+            </div>
+
+            <button
+              class="primary-btn"
+              onclick="requestToBuy()"
+            >
+              Request to Buy
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= ORDER SECTION ================= -->
+  <section class="main-section orders-section" id="orders">
+
+    <div class="section-heading">
+      <span class="section-label">ORDER MANAGEMENT</span>
+
+      <h2>Track Your Orders</h2>
+
+      <p>
+        Manage buyer requests and verified orders in one place.
+      </p>
+    </div>
+
+
+    <div class="order-buttons">
+
+      <button
+        class="secondary-btn"
+        onclick="showOrderRequests()"
+      >
+        📩 Order Requests
+      </button>
+
+      <button
+        class="primary-btn"
+        onclick="showVerifiedOrder()"
+      >
+        ✅ Verified Orders
+      </button>
+
+    </div>
+
+
+    <div class="order-output" id="orderOutput">
+      <p>Select an option to view order details.</p>
+    </div>
+
+  </section>
+
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+
+    <div class="footer-content">
+
+      <div class="footer-brand">
+        <div class="logo">
+          <span class="logo-mark">🌾</span>
+          <span class="logo-text">AgriCraft <strong>Connect</strong></span>
+        </div>
+
+        <p>
+          Empowering rural producers through technology,
+          AI and better market access.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#seller">Seller</a>
+        <a href="#buyer">Buyer</a>
+        <a href="#orders">Orders</a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 AgriCraft Connect. All rights reserved.
+    </div>
+
+  </footer>
+
+
+  <!-- ================= MODAL ================= -->
+  <div
+    class="modal-overlay"
+    id="modalOverlay"
+    hidden
+    onclick="closeModal()"
+  >
+
+    <div
+      class="modal-content"
+      id="modalContent"
+      onclick="event.stopPropagation()"
+    >
+      <button
+        class="modal-close"
+        onclick="closeModal()"
+      >
+        ×
+      </button>
+
+      <div id="modalBody"></div>
+    </div>
+
+  </div>
+
+
+  <script src="script.js"></script>
 
 </body>
 </html>
