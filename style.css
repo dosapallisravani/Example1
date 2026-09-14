@@ -34,65 +34,194 @@ input {
    NAVBAR
 ================================ */
 
+/* =================================
+   NAVBAR
+================================= */
+
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 10px;
-    background-color: #f4f1ea;
+    width: 100%;
+    background: #fffdf8;
+    border-bottom: 1px solid #e8e2d8;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.navbar .logo {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #2c3529;
+.nav-container {
+    width: 92%;
+    max-width: 1200px;
+    height: 62px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
+
+
+/* =================================
+   LOGO
+================================= */
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    text-decoration: none;
+    color: #35402d;
+
+    font-size: 19px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.logo-icon {
+    font-size: 21px;
+}
+
+
+/* =================================
+   DESKTOP NAV LINKS
+================================= */
 
 .nav-links {
     display: flex;
-    gap: 20px;
+    align-items: center;
+    gap: 25px;
 }
 
 .nav-links a {
     text-decoration: none;
-    color: #333;
-    font-size: 0.95rem;
+    color: #4b5145;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: 0.2s ease;
 }
+
+.nav-links a:hover {
+    color: #c9785d;
+}
+
+
+/* =================================
+   HAMBURGER
+================================= */
 
 .menu-toggle {
     display: none;
-    font-size: 1.3rem;
+
+    border: none;
+    background: transparent;
+
+    font-size: 25px;
+    color: #35402d;
+
     cursor: pointer;
-    color: #2c3529;
+
+    padding: 3px;
+    line-height: 1;
 }
 
+
+/* =================================
+   MOBILE NAVBAR
+================================= */
+
 @media (max-width: 768px) {
+
+    .nav-container {
+        width: 94%;
+        height: 54px;
+    }
+
+    /* Logo */
+    .logo {
+        font-size: 16px;
+        gap: 5px;
+    }
+
+    .logo-icon {
+        font-size: 18px;
+    }
+
+    /* Hamburger right corner */
     .menu-toggle {
         display: block;
+        margin-left: auto;
     }
 
+    /* Hide menu initially */
     .nav-links {
         display: none;
-        flex-direction: column;
+
         position: absolute;
-        top: 60px;
+        top: 54px;
         left: 0;
+
         width: 100%;
-        background-color: #f4f1ea;
-        padding: 20px;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-        gap: 12px;
+
+        background: #fffdf8;
+
+        flex-direction: column;
+        align-items: center;
+
+        gap: 0;
+
+        border-top: 1px solid #eee7dc;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
     }
 
+    /* Show menu */
     .nav-links.active {
         display: flex;
     }
-       }
-       
+
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+
+        padding: 12px 0;
+
+        font-size: 14px;
+
+        border-bottom: 1px solid #eee7dc;
+    }
+
+    .nav-links a:hover {
+        background: #e5e9d5;
+    }
+}
+
+
+/* =================================
+   VERY SMALL PHONES
+================================= */
+
+@media (max-width: 400px) {
+
+    .nav-container {
+        height: 52px;
+    }
+
+    .logo {
+        font-size: 15px;
+    }
+
+    .logo-icon {
+        font-size: 17px;
+    }
+
+    .menu-toggle {
+        font-size: 23px;
+    }
+
+    .nav-links {
+        top: 52px;
+    }
+}
 /* ================================
    HERO
 ================================ */
