@@ -319,7 +319,44 @@
                             <span class="panel-icon">
                                 🧑‍🌾
                             </span>
+<div class="price-calculator">
+  <h3>Smart Selling Price Calculator</h3>
 
+  <input
+    type="number"
+    id="rawMaterialCost"
+    placeholder="Raw material cost"
+    min="0"
+  />
+
+  <input
+    type="number"
+    id="labourCost"
+    placeholder="Labour fees"
+    min="0"
+  />
+
+  <input
+    type="number"
+    id="otherExpenses"
+    placeholder="Other expenses"
+    min="0"
+  />
+
+  <input
+    type="number"
+    id="profitMargin"
+    placeholder="Profit margin (%)"
+    min="0"
+    value="20"
+  />
+
+  <button type="button" onclick="calculateSellingPrice()">
+    Calculate Selling Price
+  </button>
+
+  <div id="sellingPriceResult"></div>
+</div>
                         </div>
 
 
