@@ -558,7 +558,17 @@ function changeLanguage() {
     );
 
     applyLanguage(selectedLanguage);
+let selectedLanguage =
+    localStorage.getItem("agriCraftLanguage") || "en-IN";
 
+let sellerLanguage =
+    localStorage.getItem("agriCraftSellerLanguage") || "en-IN";
+
+let homeLanguage =
+    localStorage.getItem("agriCraftHomeLanguage") || "en-IN";
+
+let currentCatalog = null;
+let currentMatch = null;
 }
 
 
