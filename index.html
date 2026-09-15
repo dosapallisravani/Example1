@@ -42,11 +42,12 @@
                 <a href="#about">About</a>
 
                 <!-- NAVBAR LANGUAGE SELECTOR -->
+
                 <div class="navbar-language">
 
                     <select
                         id="navbarLanguageSelect"
-                        onchange="changeNavbarLanguage()"
+                        onchange="changeNavbarLanguage(this.value)"
                         aria-label="Select language"
                     >
                         <option value="en-IN">English</option>
@@ -65,7 +66,7 @@
     </nav>
 
 
-    <!-- ================= HOME ================= -->
+    <!-- ================= HOME / HERO ================= -->
 
     <main>
 
@@ -75,16 +76,20 @@
 
                 <div class="hero-text">
 
-                    <span class="badge">
+                    <span class="badge" id="heroBadge">
                         Smart India Hackathon Prototype
                     </span>
 
-                    <h1>
+                    <!-- HERO TITLE -->
+
+                    <h1 id="heroTitle">
                         From Local Craft<br>
                         to the <span>Right Buyer</span>
                     </h1>
 
-                    <p>
+                    <!-- HERO DESCRIPTION -->
+
+                    <p id="heroDescription">
                         AI-powered market linkage for rural producers.
                         List with a photo and your voice — we do the rest.
                     </p>
@@ -93,6 +98,7 @@
 
                         <button
                             class="btn primary"
+                            id="sellerHeroButton"
                             type="button"
                             onclick="goToSeller()"
                         >
@@ -101,6 +107,7 @@
 
                         <button
                             class="btn secondary"
+                            id="buyerHeroButton"
                             type="button"
                             onclick="goToBuyer()"
                         >
@@ -109,7 +116,27 @@
 
                     </div>
 
-                    <!-- HOME VOICE AND SEARCH REMOVED -->
+                    <!-- HERO LANGUAGE SELECTOR -->
+
+                    <div class="hero-language-selector">
+
+                        <label for="heroLanguageSelect">
+                            🌐 Choose Language
+                        </label>
+
+                        <select
+                            id="heroLanguageSelect"
+                            onchange="changeHeroLanguage(this.value)"
+                        >
+                            <option value="en-IN">English</option>
+                            <option value="te-IN">తెలుగు</option>
+                            <option value="hi-IN">हिंदी</option>
+                            <option value="ta-IN">தமிழ்</option>
+                            <option value="kn-IN">ಕನ್ನಡ</option>
+                            <option value="ml-IN">മലയാളം</option>
+                        </select>
+
+                    </div>
 
                     <div class="hero-mini-info">
 
@@ -190,75 +217,51 @@
                 <div class="steps-grid">
 
                     <div class="step-card">
-
                         <div class="step-number">01</div>
                         <div class="step-icon">📸</div>
-
                         <h3>Photo + Voice</h3>
-
                         <p>
                             Upload a product photo and explain details
                             in your local language.
                         </p>
-
                     </div>
 
-
                     <div class="step-card">
-
                         <div class="step-number">02</div>
                         <div class="step-icon">🤖</div>
-
                         <h3>AI Analysis</h3>
-
                         <p>
                             AI understands the image and voice information.
                         </p>
-
                     </div>
 
-
                     <div class="step-card">
-
                         <div class="step-number">03</div>
                         <div class="step-icon">🗂️</div>
-
                         <h3>Smart Catalog</h3>
-
                         <p>
                             Product name, category, tags and price insight
                             are generated.
                         </p>
-
                     </div>
 
-
                     <div class="step-card">
-
                         <div class="step-number">04</div>
                         <div class="step-icon">🤝</div>
-
                         <h3>Right Buyer</h3>
-
                         <p>
                             AI matches products with suitable buyer
                             requirements.
                         </p>
-
                     </div>
 
-
                     <div class="step-card">
-
                         <div class="step-number">05</div>
                         <div class="step-icon">✅</div>
-
                         <h3>Verified Order</h3>
-
                         <p>
                             Buyer and seller confirm the order digitally.
                         </p>
-
                     </div>
 
                 </div>
@@ -297,7 +300,6 @@
 
                 <div class="seller-layout">
 
-
                     <!-- SELLER FORM -->
 
                     <div class="panel-card">
@@ -334,31 +336,14 @@
 
                             <select
                                 id="sellerLanguageSelect"
-                                onchange="changeSellerLanguage()"
+                                onchange="changeSellerLanguage(this.value)"
                             >
-                                <option value="en-IN">
-                                    English
-                                </option>
-
-                                <option value="te-IN">
-                                    తెలుగు
-                                </option>
-
-                                <option value="hi-IN">
-                                    हिंदी
-                                </option>
-
-                                <option value="ta-IN">
-                                    தமிழ்
-                                </option>
-
-                                <option value="kn-IN">
-                                    ಕನ್ನಡ
-                                </option>
-
-                                <option value="ml-IN">
-                                    മലയാളം
-                                </option>
+                                <option value="en-IN">English</option>
+                                <option value="te-IN">తెలుగు</option>
+                                <option value="hi-IN">हिंदी</option>
+                                <option value="ta-IN">தமிழ்</option>
+                                <option value="kn-IN">ಕನ್ನಡ</option>
+                                <option value="ml-IN">മലയാളം</option>
                             </select>
 
                         </div>
@@ -395,7 +380,6 @@
 
                             </div>
 
-
                             <img
                                 id="imagePreview"
                                 class="image-preview"
@@ -405,7 +389,10 @@
                         </div>
 
 
-                        <label class="field-label">
+                        <label
+                            class="field-label"
+                            for="sellerProductName"
+                        >
                             Product Name
                         </label>
 
@@ -420,7 +407,10 @@
 
                             <div>
 
-                                <label class="field-label">
+                                <label
+                                    class="field-label"
+                                    for="sellerQuantity"
+                                >
                                     Quantity
                                 </label>
 
@@ -435,7 +425,10 @@
 
                             <div>
 
-                                <label class="field-label">
+                                <label
+                                    class="field-label"
+                                    for="sellerPrice"
+                                >
                                     Expected Price
                                 </label>
 
@@ -450,7 +443,10 @@
                         </div>
 
 
-                        <label class="field-label">
+                        <label
+                            class="field-label"
+                            for="sellerLocation"
+                        >
                             Location
                         </label>
 
@@ -461,10 +457,13 @@
                         >
 
 
+                        <!-- SELLER VOICE BUTTON -->
+
                         <button
                             class="voice-button"
+                            id="sellerVoiceButton"
                             type="button"
-                            onclick="startSellerVoice()"
+                            onclick="startSellerVoice(this)"
                         >
                             🎙️ Speak Product Details
                         </button>
@@ -495,7 +494,6 @@
                         <div class="panel-title">
 
                             <div>
-
                                 <span class="panel-label">
                                     STEP 2
                                 </span>
@@ -503,7 +501,6 @@
                                 <h3>
                                     AgriCraft AI
                                 </h3>
-
                             </div>
 
                             <span class="panel-icon">
@@ -520,7 +517,6 @@
                             </div>
 
                             <div>
-
                                 <h4>
                                     AI-assisted catalog creation
                                 </h4>
@@ -529,7 +525,6 @@
                                     Your photo and voice are converted
                                     into clear product information.
                                 </p>
-
                             </div>
 
                         </div>
@@ -539,13 +534,11 @@
                             class="ai-processing"
                             id="aiProcessing"
                         >
-
                             <div class="loader"></div>
 
                             <span>
                                 AI is analysing your product...
                             </span>
-
                         </div>
 
 
@@ -665,7 +658,6 @@
 
                 <div class="buyer-layout">
 
-
                     <!-- BUYER FORM -->
 
                     <div class="panel-card buyer-form-card">
@@ -673,7 +665,6 @@
                         <div class="panel-title">
 
                             <div>
-
                                 <span class="panel-label">
                                     BUYER REQUIREMENT
                                 </span>
@@ -681,7 +672,6 @@
                                 <h3>
                                     What are you looking for?
                                 </h3>
-
                             </div>
 
                             <span class="panel-icon">
@@ -704,39 +694,23 @@
 
                             <select
                                 id="languageSelect"
-                                onchange="changeLanguage()"
+                                onchange="changeLanguage(this.value)"
                             >
-
-                                <option value="en-IN">
-                                    English
-                                </option>
-
-                                <option value="te-IN">
-                                    తెలుగు
-                                </option>
-
-                                <option value="hi-IN">
-                                    हिंदी
-                                </option>
-
-                                <option value="ta-IN">
-                                    தமிழ்
-                                </option>
-
-                                <option value="kn-IN">
-                                    ಕನ್ನಡ
-                                </option>
-
-                                <option value="ml-IN">
-                                    മലയാളം
-                                </option>
-
+                                <option value="en-IN">English</option>
+                                <option value="te-IN">తెలుగు</option>
+                                <option value="hi-IN">हिंदी</option>
+                                <option value="ta-IN">தமிழ்</option>
+                                <option value="kn-IN">ಕನ್ನಡ</option>
+                                <option value="ml-IN">മലയാളം</option>
                             </select>
 
                         </div>
 
 
-                        <label class="field-label">
+                        <label
+                            class="field-label"
+                            for="buyerProduct"
+                        >
                             Product Needed
                         </label>
 
@@ -751,7 +725,10 @@
 
                             <div>
 
-                                <label class="field-label">
+                                <label
+                                    class="field-label"
+                                    for="buyerQuantity"
+                                >
                                     Quantity
                                 </label>
 
@@ -766,7 +743,10 @@
 
                             <div>
 
-                                <label class="field-label">
+                                <label
+                                    class="field-label"
+                                    for="buyerBudget"
+                                >
                                     Budget Per Piece
                                 </label>
 
@@ -781,7 +761,10 @@
                         </div>
 
 
-                        <label class="field-label">
+                        <label
+                            class="field-label"
+                            for="buyerLocation"
+                        >
                             Delivery Location
                         </label>
 
@@ -792,7 +775,10 @@
                         >
 
 
-                        <label class="field-label">
+                        <label
+                            class="field-label"
+                            for="buyerDate"
+                        >
                             Required By
                         </label>
 
@@ -802,11 +788,13 @@
                         >
 
 
+                        <!-- BUYER VOICE BUTTON -->
+
                         <button
                             class="voice-button"
                             id="buyerVoiceButton"
                             type="button"
-                            onclick="startBuyerVoice()"
+                            onclick="startBuyerVoice(this)"
                         >
                             🎙️ Speak Your Requirement
                         </button>
@@ -837,7 +825,6 @@
                         <div class="panel-title">
 
                             <div>
-
                                 <span class="panel-label">
                                     AI MATCHING
                                 </span>
@@ -845,7 +832,6 @@
                                 <h3>
                                     Suitable Products
                                 </h3>
-
                             </div>
 
                             <span class="panel-icon">
@@ -912,7 +898,6 @@
                                     class="match-details"
                                     id="matchedProductDetails"
                                 >
-
                                     <span>
                                         📦 20 pieces
                                     </span>
@@ -924,7 +909,6 @@
                                     <span>
                                         📍 Eluru
                                     </span>
-
                                 </div>
 
 
@@ -994,7 +978,6 @@
 
                 <div class="orders-grid">
 
-
                     <div class="order-action-card">
 
                         <div class="order-card-icon">
@@ -1051,11 +1034,9 @@
                     class="order-output"
                     id="orderOutput"
                 >
-
                     <p>
                         Your order information will appear here.
                     </p>
-
                 </div>
 
             </div>
@@ -1120,13 +1101,8 @@
                     href="#home"
                     class="footer-logo"
                 >
-
-                    <span class="logo-mark">
-                        A
-                    </span>
-
+                    <span class="logo-mark">A</span>
                     AgriCraft Connect
-
                 </a>
 
                 <p>
@@ -1173,6 +1149,7 @@
             <div id="modalContent"></div>
 
         </div>
+
     </div>
 
 
