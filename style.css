@@ -1317,3 +1317,49 @@ footer {
     width: 150px;
   }
 }
+.price-calculator {
+  margin-top: 25px;
+  padding: 25px;
+  border-radius: 18px;
+  background: #fff7f2;
+  box-shadow: 0 8px 25px rgba(120, 80, 80, 0.08);
+}
+
+.price-calculator h3 {
+  margin-bottom: 18px;
+  color: #7d5265;
+}
+
+.price-calculator input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #decbd2;
+  border-radius: 10px;
+  outline: none;
+}
+
+.price-calculator button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  background: #b784c7;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.price-summary {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #574451;
+}
+
+.price-summary h3 {
+  color: #a45d78;
+  margin-top: 15px;
+}
