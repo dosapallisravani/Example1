@@ -1,4 +1,3 @@
-
 /* =========================================================
    AGRICRAFT CONNECT - UPDATED MAIN JAVASCRIPT
    ========================================================= */
@@ -10,9 +9,6 @@ let selectedLanguage =
 
 let sellerLanguage =
     localStorage.getItem("agriCraftSellerLanguage") || "en-IN";
-
-let homeLanguage =
-    localStorage.getItem("agriCraftHomeLanguage") || "en-IN";
 
 let currentCatalog = null;
 let currentMatch = null;
@@ -82,25 +78,28 @@ function goToBuyer() {
 /* ================= MOBILE MENU ================= */
 
 document.addEventListener("DOMContentLoaded", function () {
-
     const menuToggle = document.getElementById("menuToggle");
     const navLinks = document.getElementById("navLinks");
 
     if (menuToggle && navLinks) {
-
         menuToggle.addEventListener("click", function () {
             navLinks.classList.toggle("active");
             navLinks.classList.toggle("open");
         });
 
         navLinks.querySelectorAll("a").forEach(function (link) {
-
             link.addEventListener("click", function () {
                 navLinks.classList.remove("active");
                 navLinks.classList.remove("open");
             });
-
         });
+    }
+
+    const navbarLanguageSelect =
+        document.getElementById("navbarLanguageSelect");
+
+    if (navbarLanguageSelect) {
+        navbarLanguageSelect.value = selectedLanguage;
     }
 
     const languageSelect =
@@ -117,23 +116,14 @@ document.addEventListener("DOMContentLoaded", function () {
         sellerLanguageSelect.value = sellerLanguage;
     }
 
-    const homeLanguageSelect =
-        document.getElementById("homeLanguageSelect");
-
-    if (homeLanguageSelect) {
-        homeLanguageSelect.value = homeLanguage;
-    }
-
     setupImagePreview();
     initializePage();
-
 });
 
 
 /* ================= IMAGE PREVIEW ================= */
 
 function setupImagePreview() {
-
     const input = document.getElementById("productImage");
     const preview = document.getElementById("imagePreview");
     const placeholder =
@@ -145,7 +135,6 @@ function setupImagePreview() {
     if (!input) return;
 
     input.addEventListener("change", function () {
-
         const file = input.files[0];
 
         if (!file) return;
@@ -158,7 +147,6 @@ function setupImagePreview() {
         const reader = new FileReader();
 
         reader.onload = function (event) {
-
             if (preview) {
                 preview.src = event.target.result;
                 preview.style.display = "block";
@@ -167,20 +155,16 @@ function setupImagePreview() {
             if (placeholder) {
                 placeholder.style.display = "none";
             }
-
         };
 
         reader.readAsDataURL(file);
     });
 
     if (uploadArea) {
-
         uploadArea.addEventListener("click", function (event) {
-
             if (event.target !== input) {
                 input.click();
             }
-
         });
     }
 }
@@ -193,7 +177,6 @@ function createVoiceRecognition(
     callback,
     languageCode = selectedLanguage
 ) {
-
     const SpeechRecognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
@@ -202,7 +185,6 @@ function createVoiceRecognition(
         document.getElementById(statusId);
 
     if (!SpeechRecognition) {
-
         if (status) {
             status.textContent =
                 "Voice recognition is not supported. Please use Google Chrome.";
@@ -223,7 +205,6 @@ function createVoiceRecognition(
     recognition.maxAlternatives = 1;
 
     recognition.onstart = function () {
-
         if (status) {
             status.textContent =
                 "🎙️ Listening... Please speak now.";
@@ -231,7 +212,6 @@ function createVoiceRecognition(
     };
 
     recognition.onresult = function (event) {
-
         const transcript =
             event.results[0][0].transcript.trim();
 
@@ -246,7 +226,6 @@ function createVoiceRecognition(
     };
 
     recognition.onerror = function (event) {
-
         let message = "Voice recognition failed.";
 
         if (event.error === "not-allowed") {
@@ -270,7 +249,6 @@ function createVoiceRecognition(
     };
 
     recognition.onend = function () {
-
         if (
             status &&
             status.textContent.includes("Listening")
@@ -291,11 +269,9 @@ function createVoiceRecognition(
 /* ================= SELLER VOICE ================= */
 
 function startSellerVoice() {
-
     createVoiceRecognition(
         "sellerVoiceStatus",
         function (text) {
-
             const productName =
                 document.getElementById("sellerProductName");
 
@@ -309,7 +285,6 @@ function startSellerVoice() {
                 );
 
             if (quantityMatch) {
-
                 const quantity =
                     document.getElementById("sellerQuantity");
 
@@ -320,11 +295,10 @@ function startSellerVoice() {
 
             const priceMatch =
                 text.match(
-                    /(?:₹|rs\.?|rupees?|రూపాయలు|రూపాయలు|रुपये|रुपए)\s*(\d+)/i
+                    /(?:₹|rs\.?|rupees?|రూపాయలు|रुपये|रुपए)\s*(\d+)/i
                 );
 
             if (priceMatch) {
-
                 const price =
                     document.getElementById("sellerPrice");
 
@@ -332,7 +306,6 @@ function startSellerVoice() {
                     price.value = priceMatch[1];
                 }
             }
-
         },
         sellerLanguage
     );
@@ -342,41 +315,17 @@ function startSellerVoice() {
 /* ================= BUYER VOICE ================= */
 
 function startBuyerVoice() {
-
     createVoiceRecognition(
         "buyerVoiceStatus",
         function (text) {
-
             const product =
                 document.getElementById("buyerProduct");
 
             if (product) {
                 product.value = text;
             }
-
         },
         selectedLanguage
-    );
-}
-
-
-/* ================= HOME VOICE ================= */
-
-function startHomeVoice() {
-
-    createVoiceRecognition(
-        "homeVoiceStatus",
-        function (text) {
-
-            const homeInput =
-                document.getElementById("homeSearchInput");
-
-            if (homeInput) {
-                homeInput.value = text;
-            }
-
-        },
-        homeLanguage
     );
 }
 
@@ -384,7 +333,6 @@ function startHomeVoice() {
 /* ================= LANGUAGE SYSTEM ================= */
 
 const translations = {
-
     "en-IN": {
         sell: "Sell",
         buy: "Buy",
@@ -540,14 +488,38 @@ const translations = {
         findMatches: "AI പൊരുത്തങ്ങൾ കണ്ടെത്തുക",
         requestBuy: "വാങ്ങാനുള്ള അഭ്യർത്ഥന"
     }
-
 };
+
+
+/* ================= CHANGE NAVBAR LANGUAGE ================= */
+
+function changeNavbarLanguage() {
+    const select =
+        document.getElementById("navbarLanguageSelect");
+
+    if (!select) return;
+
+    selectedLanguage = select.value;
+
+    localStorage.setItem(
+        "agriCraftLanguage",
+        selectedLanguage
+    );
+
+    const buyerSelect =
+        document.getElementById("languageSelect");
+
+    if (buyerSelect) {
+        buyerSelect.value = selectedLanguage;
+    }
+
+    applyLanguage(selectedLanguage);
+}
 
 
 /* ================= CHANGE BUYER LANGUAGE ================= */
 
 function changeLanguage() {
-
     const select =
         document.getElementById("languageSelect");
 
@@ -559,6 +531,13 @@ function changeLanguage() {
         "agriCraftLanguage",
         selectedLanguage
     );
+
+    const navbarSelect =
+        document.getElementById("navbarLanguageSelect");
+
+    if (navbarSelect) {
+        navbarSelect.value = selectedLanguage;
+    }
 
     applyLanguage(selectedLanguage);
 
@@ -575,7 +554,6 @@ function changeLanguage() {
 /* ================= CHANGE SELLER LANGUAGE ================= */
 
 function changeSellerLanguage() {
-
     const select =
         document.getElementById("sellerLanguageSelect");
 
@@ -598,36 +576,9 @@ function changeSellerLanguage() {
 }
 
 
-/* ================= CHANGE HOME LANGUAGE ================= */
-
-function changeHomeLanguage() {
-
-    const select =
-        document.getElementById("homeLanguageSelect");
-
-    if (!select) return;
-
-    homeLanguage = select.value;
-
-    localStorage.setItem(
-        "agriCraftHomeLanguage",
-        homeLanguage
-    );
-
-    const status =
-        document.getElementById("homeVoiceStatus");
-
-    if (status) {
-        status.textContent =
-            "Home search language changed successfully.";
-    }
-}
-
-
 /* ================= APPLY LANGUAGE ================= */
 
 function applyLanguage(language) {
-
     const t =
         translations[language] ||
         translations["en-IN"];
@@ -636,7 +587,6 @@ function applyLanguage(language) {
         document.querySelectorAll("#navLinks a");
 
     if (navLinks.length >= 5) {
-
         navLinks[0].textContent = "Home";
         navLinks[1].textContent = t.sell;
         navLinks[2].textContent = t.buy;
@@ -662,7 +612,6 @@ function applyLanguage(language) {
         document.querySelectorAll("#seller .field-label");
 
     if (sellerLabels.length >= 4) {
-
         sellerLabels[0].textContent = "Product Photo";
         sellerLabels[1].textContent = t.productName;
         sellerLabels[2].textContent = t.quantity;
@@ -673,7 +622,6 @@ function applyLanguage(language) {
         document.getElementById("sellerLocation");
 
     if (sellerLocation) {
-
         sellerLocation.placeholder =
             language === "te-IN"
                 ? "ఉదాహరణ: ఏలూరు"
@@ -704,7 +652,6 @@ function applyLanguage(language) {
         document.querySelectorAll("#buyer .field-label");
 
     if (buyerLabels.length >= 5) {
-
         buyerLabels[0].textContent =
             "🌐 Select Your Language";
 
@@ -751,6 +698,12 @@ function applyLanguage(language) {
 /* ================= INITIALIZE PAGE ================= */
 
 function initializePage() {
+    const navbarLanguageSelect =
+        document.getElementById("navbarLanguageSelect");
+
+    if (navbarLanguageSelect) {
+        navbarLanguageSelect.value = selectedLanguage;
+    }
 
     const languageSelect =
         document.getElementById("languageSelect");
@@ -764,13 +717,6 @@ function initializePage() {
 
     if (sellerLanguageSelect) {
         sellerLanguageSelect.value = sellerLanguage;
-    }
-
-    const homeLanguageSelect =
-        document.getElementById("homeLanguageSelect");
-
-    if (homeLanguageSelect) {
-        homeLanguageSelect.value = homeLanguage;
     }
 
     applyLanguage(selectedLanguage);
@@ -815,7 +761,6 @@ function initializePage() {
 /* ================= CATEGORY DETECTION ================= */
 
 function detectCategory(name) {
-
     const text = normalizeText(name);
 
     if (
@@ -881,7 +826,6 @@ function detectCategory(name) {
 /* ================= TAG GENERATION ================= */
 
 function generateTags(name) {
-
     const text = normalizeText(name);
 
     const tags = [
@@ -919,169 +863,12 @@ function generateTags(name) {
 }
 
 
-/* ================= AI CATALOG GENERATION ================= */
-
-function generateCatalog() {
-
-    const name =
-        getValue("sellerProductName");
-
-    const quantity =
-        getValue("sellerQuantity");
-
-    const price =
-        getValue("sellerPrice");
-
-    const location =
-        getValue("sellerLocation");
-
-    if (!name) {
-
-        alert("Please enter the product name.");
-
-        document.getElementById(
-            "sellerProductName"
-        )?.focus();
-
-        return;
-    }
-
-    const processing =
-        document.getElementById("aiProcessing");
-
-    const catalogResult =
-        document.getElementById("catalogResult");
-
-    const catalogEmpty =
-        document.getElementById("catalogEmpty");
-
-    if (catalogEmpty) {
-        catalogEmpty.style.display = "none";
-    }
-
-    if (catalogResult) {
-        catalogResult.style.display = "none";
-    }
-
-    if (processing) {
-        processing.style.display = "flex";
-    }
-
-    setTimeout(function () {
-
-        const category =
-            detectCategory(name);
-
-        const tags =
-            generateTags(name);
-
-        let imageSource =
-            "images/craft1.jpg";
-
-        const preview =
-            document.getElementById("imagePreview");
-
-        if (
-            preview &&
-            preview.src &&
-            preview.src.startsWith("data:image")
-        ) {
-            imageSource = preview.src;
-        }
-
-        currentCatalog = {
-
-            id: "CAT-" + Date.now(),
-
-            name: name,
-
-            quantity: quantity || "1",
-
-            price: price || "0",
-
-            location: location || "Local",
-
-            category: category,
-
-            tags: tags,
-
-            keywords: createProductKeywords(name),
-
-            image: imageSource,
-
-            description:
-                "Traditional rural product created by a local producer with authentic craftsmanship."
-        };
-
-        const catalogImage =
-            document.getElementById("catalogImage");
-
-        if (catalogImage) {
-            catalogImage.src =
-                currentCatalog.image;
-        }
-
-        setText(
-            "catalogName",
-            currentCatalog.name
-        );
-
-        setText(
-            "catalogDescription",
-            currentCatalog.description
-        );
-
-        setText(
-            "catalogCategory",
-            "Category: " +
-            currentCatalog.category
-        );
-
-        setText(
-            "catalogTags",
-            "Tags: " +
-            currentCatalog.tags
-        );
-
-        setText(
-            "catalogQuantity",
-            "Quantity: " +
-            currentCatalog.quantity
-        );
-
-        setText(
-            "catalogPrice",
-            "Price: ₹" +
-            Number(currentCatalog.price)
-                .toLocaleString("en-IN")
-        );
-
-        setText(
-            "catalogLocation",
-            "Location: " +
-            currentCatalog.location
-        );
-
-        if (processing) {
-            processing.style.display = "none";
-        }
-
-        if (catalogResult) {
-            catalogResult.style.display = "block";
-        }
-
-    }, 900);
-}
-
-
 /* ================= PRODUCT KEYWORDS ================= */
 
 function createProductKeywords(name) {
-
     const text = normalizeText(name);
 
     const keywordMap = {
-
         saree: [
             "saree",
             "sari",
@@ -1147,13 +934,11 @@ function createProductKeywords(name) {
             "పండ్లు",
             "फल"
         ]
-
     };
 
     let keywords = [text];
 
     Object.keys(keywordMap).forEach(function (key) {
-
         const relatedWords = keywordMap[key];
 
         const matched = relatedWords.some(function (word) {
@@ -1163,19 +948,157 @@ function createProductKeywords(name) {
         if (matched) {
             keywords = keywords.concat(relatedWords);
         }
-
     });
 
     return [...new Set(keywords)].join(", ");
 }
 
 
+/* ================= AI CATALOG GENERATION ================= */
+
+function generateCatalog() {
+    const name =
+        getValue("sellerProductName");
+
+    const quantity =
+        getValue("sellerQuantity");
+
+    const price =
+        getValue("sellerPrice");
+
+    const location =
+        getValue("sellerLocation");
+
+    if (!name) {
+        alert("Please enter the product name.");
+
+        document.getElementById(
+            "sellerProductName"
+        )?.focus();
+
+        return;
+    }
+
+    const processing =
+        document.getElementById("aiProcessing");
+
+    const catalogResult =
+        document.getElementById("catalogResult");
+
+    const catalogEmpty =
+        document.getElementById("catalogEmpty");
+
+    if (catalogEmpty) {
+        catalogEmpty.style.display = "none";
+    }
+
+    if (catalogResult) {
+        catalogResult.style.display = "none";
+    }
+
+    if (processing) {
+        processing.style.display = "flex";
+    }
+
+    setTimeout(function () {
+        const category =
+            detectCategory(name);
+
+        const tags =
+            generateTags(name);
+
+        let imageSource =
+            "images/craft1.jpg";
+
+        const preview =
+            document.getElementById("imagePreview");
+
+        if (
+            preview &&
+            preview.src &&
+            preview.src.startsWith("data:image")
+        ) {
+            imageSource = preview.src;
+        }
+
+        currentCatalog = {
+            id: "CAT-" + Date.now(),
+            name: name,
+            quantity: quantity || "1",
+            price: price || "0",
+            location: location || "Local",
+            category: category,
+            tags: tags,
+            keywords: createProductKeywords(name),
+            image: imageSource,
+            description:
+                "Traditional rural product created by a local producer with authentic craftsmanship."
+        };
+
+        const catalogImage =
+            document.getElementById("catalogImage");
+
+        if (catalogImage) {
+            catalogImage.src =
+                currentCatalog.image;
+        }
+
+        setText(
+            "catalogName",
+            currentCatalog.name
+        );
+
+        setText(
+            "catalogDescription",
+            currentCatalog.description
+        );
+
+        setText(
+            "catalogCategory",
+            "Category: " +
+            currentCatalog.category
+        );
+
+        setText(
+            "catalogTags",
+            "Tags: " +
+            currentCatalog.tags
+        );
+
+        setText(
+            "catalogQuantity",
+            "Quantity: " +
+            currentCatalog.quantity
+        );
+
+        setText(
+            "catalogPrice",
+            "Price: ₹" +
+            Number(currentCatalog.price)
+                .toLocaleString("en-IN")
+        );
+
+        setText(
+            "catalogLocation",
+            "Location: " +
+            currentCatalog.location
+        );
+
+        if (processing) {
+            processing.style.display = "none";
+        }
+
+        if (catalogResult) {
+            catalogResult.style.display = "block";
+        }
+    }, 900);
+}
+
+
 /* ================= PUBLISH PRODUCT ================= */
 
 function publishProduct() {
-
     if (!currentCatalog) {
-
         alert(
             "Please generate the Smart Catalog first."
         );
@@ -1189,7 +1112,6 @@ function publishProduct() {
         ) || [];
 
     const product = {
-
         ...currentCatalog,
 
         publishedAt:
@@ -1221,9 +1143,7 @@ function publishProduct() {
 /* ================= DEMO PRODUCTS ================= */
 
 function getDemoProducts() {
-
     return [
-
         {
             id: "DEMO-001",
             name: "Handwoven Cotton Saree",
@@ -1233,7 +1153,7 @@ function getDemoProducts() {
             category: "Handloom & Textile",
             tags: "Handmade, Local, Cotton, Handloom",
             keywords:
-                "saree, sari, cotton, handloom, చీర, సाड़ी",
+                "saree, sari, cotton, handloom, చీర, साड़ी",
             image: "images/craft1.jpg",
             description:
                 "Traditional handwoven cotton saree made by a rural artisan."
@@ -1278,7 +1198,7 @@ function getDemoProducts() {
             category: "Food & Natural Products",
             tags: "Honey, Organic, Natural",
             keywords:
-                "honey, organic, natural, తేనె, శహద్",
+                "honey, organic, natural, తేనె, शहद",
             image: "images/honey.jpg",
             description:
                 "Pure natural honey collected from local beekeepers."
@@ -1293,12 +1213,11 @@ function getDemoProducts() {
             category: "Food & Natural Products",
             tags: "Pickle, Homemade, Food",
             keywords:
-                "pickle, mango pickle, ఆవకాయ, పచ్చడి, అचार",
+                "pickle, mango pickle, ఆవకాయ, పచ్చడి, अचार",
             image: "images/pickle.jpg",
             description:
                 "Traditional homemade mango pickle prepared with authentic spices."
         }
-
     ];
 }
 
@@ -1311,7 +1230,6 @@ function calculateProductScore(
     budget,
     buyerLocation
 ) {
-
     const request =
         normalizeText(requestedProduct);
 
@@ -1336,10 +1254,7 @@ function calculateProductScore(
         return 0;
     }
 
-    if (
-        productName === request ||
-        request === productName
-    ) {
+    if (productName === request) {
         score += 100;
     }
 
@@ -1354,7 +1269,6 @@ function calculateProductScore(
         request.split(/\s+/);
 
     requestWords.forEach(function (word) {
-
         if (word.length < 2) return;
 
         if (productName.includes(word)) {
@@ -1372,11 +1286,9 @@ function calculateProductScore(
         if (productCategory.includes(word)) {
             score += 15;
         }
-
     });
 
     if (budget) {
-
         const productPrice =
             Number(product.price) || 0;
 
@@ -1388,7 +1300,6 @@ function calculateProductScore(
     }
 
     if (buyerLocation) {
-
         const requestedLocation =
             normalizeText(buyerLocation);
 
@@ -1404,43 +1315,9 @@ function calculateProductScore(
 }
 
 
-/* ================= HOME SEARCH ================= */
-
-function searchFromHome() {
-
-    const homeSearch =
-        getValue("homeSearchInput");
-
-    if (!homeSearch) {
-
-        alert(
-            "Please type or speak a product name first."
-        );
-
-        document.getElementById(
-            "homeSearchInput"
-        )?.focus();
-
-        return;
-    }
-
-    setValue(
-        "buyerProduct",
-        homeSearch
-    );
-
-    scrollToSection("buyer");
-
-    setTimeout(function () {
-        findAIMatches();
-    }, 500);
-}
-
-
 /* ================= AI PRODUCT MATCHING ================= */
 
 function findAIMatches() {
-
     const requestedProduct =
         getValue("buyerProduct");
 
@@ -1454,7 +1331,6 @@ function findAIMatches() {
         getValue("buyerLocation");
 
     if (!requestedProduct) {
-
         alert(
             "Please enter the product you are looking for."
         );
@@ -1483,7 +1359,6 @@ function findAIMatches() {
     let bestScore = 0;
 
     allProducts.forEach(function (product) {
-
         const score =
             calculateProductScore(
                 product,
@@ -1496,7 +1371,6 @@ function findAIMatches() {
             bestScore = score;
             bestProduct = product;
         }
-
     });
 
     const matchCard =
@@ -1505,12 +1379,7 @@ function findAIMatches() {
     const matchEmpty =
         document.getElementById("matchEmpty");
 
-    /*
-     * No matching product found
-     */
-
     if (!bestProduct || bestScore <= 0) {
-
         currentMatch = null;
 
         if (matchCard) {
@@ -1519,6 +1388,7 @@ function findAIMatches() {
 
         if (matchEmpty) {
             matchEmpty.style.display = "block";
+
             matchEmpty.innerHTML = `
                 <div class="empty-message">
                     <h3>🔍 No Matching Product Found</h3>
@@ -1538,21 +1408,15 @@ function findAIMatches() {
     }
 
     currentMatch = {
-
         ...bestProduct,
-
         requestedQuantity:
             requestedQuantity || "1",
-
         requestedBudget:
             budget || "",
-
         buyerLocation:
             buyerLocation || "",
-
         requiredBy:
             getValue("buyerDate"),
-
         matchScore:
             Math.min(100, bestScore)
     };
@@ -1563,13 +1427,11 @@ function findAIMatches() {
         );
 
     if (matchImage) {
-
         matchImage.src =
-            currentMatch.image ||
-            "images/craft1.jpg";
+            currentMatch.image;
 
         matchImage.onerror = function () {
-            this.src = "images/craft1.jpg";
+            this.style.display = "none";
         };
     }
 
@@ -1590,9 +1452,7 @@ function findAIMatches() {
         );
 
     if (details) {
-
         details.innerHTML = `
-
             <span>
                 📦 ${escapeHTML(
                     currentMatch.quantity || "Available"
@@ -1609,7 +1469,6 @@ function findAIMatches() {
                     currentMatch.location || "Local"
                 )}
             </span>
-
         `;
     }
 
@@ -1626,9 +1485,7 @@ function findAIMatches() {
 /* ================= REQUEST TO BUY ================= */
 
 function requestToBuy() {
-
     if (!currentMatch) {
-
         alert(
             "Please find an AI match first."
         );
@@ -1666,15 +1523,13 @@ function requestToBuy() {
         Date.now().toString().slice(-8);
 
     const order = {
-
         id: orderId,
 
         productName:
             currentMatch.name,
 
         productImage:
-            currentMatch.image ||
-            "images/craft1.jpg",
+            currentMatch.image,
 
         sellerLocation:
             currentMatch.location,
@@ -1747,18 +1602,15 @@ function requestToBuy() {
 /* ================= GET ORDERS ================= */
 
 function getOrders() {
-
     return JSON.parse(
         localStorage.getItem("agriCraftOrders")
     ) || [];
-
 }
 
 
 /* ================= SHOW BUYER REQUESTS ================= */
 
 function showOrderRequests() {
-
     const orders =
         getOrders();
 
@@ -1768,39 +1620,27 @@ function showOrderRequests() {
     if (!output) return;
 
     if (orders.length === 0) {
-
         output.innerHTML = `
-
             <div class="empty-message">
-
                 <h3>📩 No Buyer Requests Yet</h3>
-
                 <p>
                     Buyer requests will appear here
                     after a buyer places an order.
                 </p>
-
             </div>
-
         `;
 
         return;
     }
 
     output.innerHTML = `
-
         <div class="generated-orders">
-
             <h3>📩 Buyer Requests</h3>
 
             ${orders.map(function (order) {
-
                 return `
-
                     <div class="generated-order-card">
-
                         <div>
-
                             <strong>
                                 ${escapeHTML(order.productName)}
                             </strong>
@@ -1819,7 +1659,6 @@ function showOrderRequests() {
                                 Required By:
                                 ${escapeHTML(order.requiredBy)}
                             </p>
-
                         </div>
 
                         <span class="verified-tag">
@@ -1833,24 +1672,17 @@ function showOrderRequests() {
                         >
                             Track Order
                         </button>
-
                     </div>
-
                 `;
-
             }).join("")}
-
         </div>
-
     `;
-
 }
 
 
 /* ================= SHOW VERIFIED ORDER ================= */
 
 function showVerifiedOrder() {
-
     const orders =
         getOrders();
 
@@ -1860,20 +1692,14 @@ function showVerifiedOrder() {
     if (!output) return;
 
     if (orders.length === 0) {
-
         output.innerHTML = `
-
             <div class="empty-message">
-
                 <h3>🧾 No Verified Orders</h3>
-
                 <p>
                     Your confirmed order receipt
                     will appear here.
                 </p>
-
             </div>
-
         `;
 
         return;
@@ -1883,13 +1709,9 @@ function showVerifiedOrder() {
         orders[orders.length - 1];
 
     output.innerHTML = `
-
         <div class="receipt-card">
-
             <div class="receipt-header">
-
                 <div>
-
                     <span class="eyebrow">
                         VERIFIED ORDER
                     </span>
@@ -1897,26 +1719,21 @@ function showVerifiedOrder() {
                     <h3>
                         🧾 Digital Order Receipt
                     </h3>
-
                 </div>
 
                 <strong>
                     ${escapeHTML(order.id)}
                 </strong>
-
             </div>
 
             <div class="receipt-body">
-
                 <div class="receipt-product">
-
                     <img
                         src="${escapeHTML(order.productImage)}"
                         alt="Product"
                     >
 
                     <div>
-
                         <h3>
                             ${escapeHTML(order.productName)}
                         </h3>
@@ -1924,13 +1741,10 @@ function showVerifiedOrder() {
                         <p>
                             Rural Verified Producer
                         </p>
-
                     </div>
-
                 </div>
 
                 <div class="receipt-details">
-
                     <p>
                         <strong>Quantity:</strong>
                         ${escapeHTML(order.quantity)}
@@ -1964,13 +1778,10 @@ function showVerifiedOrder() {
                             ${escapeHTML(order.status)}
                         </span>
                     </p>
-
                 </div>
-
             </div>
 
             <div class="receipt-actions">
-
                 <button
                     class="btn primary"
                     type="button"
@@ -1978,20 +1789,15 @@ function showVerifiedOrder() {
                 >
                     📦 Track Order
                 </button>
-
             </div>
-
         </div>
-
     `;
-
 }
 
 
 /* ================= TRACK ORDER ================= */
 
 function trackOrder(orderId) {
-
     const orders =
         getOrders();
 
@@ -2006,35 +1812,27 @@ function trackOrder(orderId) {
     if (!order || !output) return;
 
     const steps = [
-
         {
             title: "Order Confirmed",
             icon: "✅"
         },
-
         {
             title: "Seller Processing",
             icon: "📦"
         },
-
         {
             title: "Ready for Delivery",
             icon: "🚚"
         },
-
         {
             title: "Delivered",
             icon: "🏠"
         }
-
     ];
 
     output.innerHTML = `
-
         <div class="tracking-card">
-
             <div class="tracking-header">
-
                 <span class="eyebrow">
                     ORDER TRACKING
                 </span>
@@ -2049,18 +1847,15 @@ function trackOrder(orderId) {
                         ${escapeHTML(order.id)}
                     </strong>
                 </p>
-
             </div>
 
             <div class="tracking-product">
-
                 <img
                     src="${escapeHTML(order.productImage)}"
                     alt="Product"
                 >
 
                 <div>
-
                     <h3>
                         ${escapeHTML(order.productName)}
                     </h3>
@@ -2074,32 +1869,25 @@ function trackOrder(orderId) {
                         Delivery:
                         ${escapeHTML(order.buyerLocation)}
                     </p>
-
                 </div>
-
             </div>
 
             <div class="tracking-timeline">
-
                 ${steps.map(function (step, index) {
-
                     const completed =
                         index <=
                         (order.trackingStep || 1) - 1;
 
                     return `
-
                         <div class="
                             tracking-step
                             ${completed ? "completed" : ""}
                         ">
-
                             <div class="tracking-icon">
                                 ${step.icon}
                             </div>
 
                             <div>
-
                                 <strong>
                                     ${step.title}
                                 </strong>
@@ -2111,38 +1899,27 @@ function trackOrder(orderId) {
                                             : "Pending"
                                     }
                                 </small>
-
                             </div>
-
                         </div>
-
                     `;
-
                 }).join("")}
-
             </div>
 
             <div class="tracking-status">
-
                 <strong>
                     Current Status:
                 </strong>
 
                 ${escapeHTML(order.status)}
-
             </div>
-
         </div>
-
     `;
-
 }
 
 
 /* ================= DELETE ORDERS ================= */
 
 function clearOrders() {
-
     localStorage.removeItem("agriCraftOrders");
     localStorage.removeItem("myBookings");
 
@@ -2157,7 +1934,6 @@ function clearOrders() {
 /* ================= MODAL ================= */
 
 function openModal(content) {
-
     const overlay =
         document.getElementById("modalOverlay");
 
@@ -2172,9 +1948,7 @@ function openModal(content) {
     overlay.style.display = "flex";
 }
 
-
 function closeModal() {
-
     const overlay =
         document.getElementById("modalOverlay");
 
@@ -2188,7 +1962,6 @@ function closeModal() {
 /* ================= MODAL OUTSIDE CLICK ================= */
 
 document.addEventListener("click", function (event) {
-
     const overlay =
         document.getElementById("modalOverlay");
 
@@ -2198,7 +1971,6 @@ document.addEventListener("click", function (event) {
     ) {
         closeModal();
     }
-
 });
 
 
@@ -2209,13 +1981,10 @@ window.goToBuyer = goToBuyer;
 
 window.startSellerVoice = startSellerVoice;
 window.startBuyerVoice = startBuyerVoice;
-window.startHomeVoice = startHomeVoice;
 
+window.changeNavbarLanguage = changeNavbarLanguage;
 window.changeLanguage = changeLanguage;
 window.changeSellerLanguage = changeSellerLanguage;
-window.changeHomeLanguage = changeHomeLanguage;
-
-window.searchFromHome = searchFromHome;
 
 window.generateCatalog = generateCatalog;
 window.publishProduct = publishProduct;
