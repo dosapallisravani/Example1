@@ -956,144 +956,54 @@ function createProductKeywords(name) {
 
 /* ================= AI CATALOG GENERATION ================= */
 
-function generateCatalog() {
-    const name =
-        getValue("sellerProductName");
+let imageSource = "images/craft1.jpg";
 
-    const quantity =
-        getValue("sellerQuantity");
+const productText = String(name || "").toLowerCase();
 
-    const price =
-        getValue("sellerPrice");
-
-    const location =
-        getValue("sellerLocation");
-
-    if (!name) {
-        alert("Please enter the product name.");
-
-        document.getElementById(
-            "sellerProductName"
-        )?.focus();
-
-        return;
-    }
-
-    const processing =
-        document.getElementById("aiProcessing");
-
-    const catalogResult =
-        document.getElementById("catalogResult");
-
-    const catalogEmpty =
-        document.getElementById("catalogEmpty");
-
-    if (catalogEmpty) {
-        catalogEmpty.style.display = "none";
-    }
-
-    if (catalogResult) {
-        catalogResult.style.display = "none";
-    }
-
-    if (processing) {
-        processing.style.display = "flex";
-    }
-
-    setTimeout(function () {
-        const category =
-            detectCategory(name);
-
-        const tags =
-            generateTags(name);
-
-        let imageSource =
-            "images/craft1.jpg";
-
-        const preview =
-            document.getElementById("imagePreview");
-
-        if (
-            preview &&
-            preview.src &&
-            preview.src.startsWith("data:image")
-        ) {
-            imageSource = preview.src;
-        }
-
-        currentCatalog = {
-            id: "CAT-" + Date.now(),
-            name: name,
-            quantity: quantity || "1",
-            price: price || "0",
-            location: location || "Local",
-            category: category,
-            tags: tags,
-            keywords: createProductKeywords(name),
-            image: imageSource,
-            description:
-                "Traditional rural product created by a local producer with authentic craftsmanship."
-        };
-
-        const catalogImage =
-            document.getElementById("catalogImage");
-
-        if (catalogImage) {
-            catalogImage.src =
-                currentCatalog.image;
-        }
-
-        setText(
-            "catalogName",
-            currentCatalog.name
-        );
-
-        setText(
-            "catalogDescription",
-            currentCatalog.description
-        );
-
-        setText(
-            "catalogCategory",
-            "Category: " +
-            currentCatalog.category
-        );
-
-        setText(
-            "catalogTags",
-            "Tags: " +
-            currentCatalog.tags
-        );
-
-        setText(
-            "catalogQuantity",
-            "Quantity: " +
-            currentCatalog.quantity
-        );
-
-        setText(
-            "catalogPrice",
-            "Price: ₹" +
-            Number(currentCatalog.price)
-                .toLocaleString("en-IN")
-        );
-
-        setText(
-            "catalogLocation",
-            "Location: " +
-            currentCatalog.location
-        );
-
-        if (processing) {
-            processing.style.display = "none";
-        }
-
-        if (catalogResult) {
-            catalogResult.style.display = "block";
-        }
-    }, 900);
+// Handloom Sarees — English, Telugu, Hindi, Tamil, Kannada
+if (
+  productText.includes("saree") ||
+  productText.includes("sarees") ||
+  productText.includes("handloom") ||
+  productText.includes("చీర") ||
+  productText.includes("చీరలు") ||
+  productText.includes("साड़ी") ||
+  productText.includes("साडियां") ||
+  productText.includes("சேலை") ||
+  productText.includes("ಸೀರೆ")
+) {
+  imageSource = "images/craft1.jpg";
 }
 
+// Handmade Pottery — English, Telugu, Hindi, Tamil, Kannada
+} else if (
+  productText.includes("pottery") ||
+  productText.includes("pot") ||
+  productText.includes("కుండ") ||
+  productText.includes("మట్టి") ||
+  productText.includes("मिट्टी") ||
+  productText.includes("बर्तन") ||
+  productText.includes("மண்பாண்டம்") ||
+  productText.includes("ಮಣ್ಣಿನ")
+) {
+  imageSource = "images/craft2.jpg";
+}
+
+// Handmade Basket — English, Telugu, Hindi, Tamil, Kannada
+} else if (
+  productText.includes("basket") ||
+  productText.includes("handmade") ||
+  productText.includes("బుట్ట") ||
+  productText.includes("చేతిపని") ||
+  productText.includes("टोकरी") ||
+  productText.includes("हस्तनिर्मित") ||
+  productText.includes("கூடை") ||
+  productText.includes("கைவினை") ||
+  productText.includes("ಬುಟ್ಟಿ") ||
+  productText.includes("ಕೈಯಿಂದ ಮಾಡಿದ")
+) {
+  imageSource = "images/craft3.jpg";
+}
 
 /* ================= PUBLISH PRODUCT ================= */
 
