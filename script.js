@@ -1,1911 +1,1333 @@
+/* =====================================================
+   AGRICRAFT CONNECT - UPDATED MAIN.JS
+===================================================== */
 
-/* =========================================================
-   AGRICRAFT CONNECT - UPDATED MAIN JAVASCRIPT
-   ========================================================= */
-
-/* ================= GLOBAL DATA ================= */
-
-let selectedLanguage =
-    localStorage.getItem("agriCraftLanguage") || "en-IN";
-
-let sellerLanguage =
-    localStorage.getItem("agriCraftSellerLanguage") || "en-IN";
-
+let selectedLanguage = "en";
+let sellerLanguage = "en";
 let currentCatalog = null;
 let currentMatch = null;
 
-
-/* ================= HELPER FUNCTIONS ================= */
+/* =====================================================
+   HELPER FUNCTIONS
+===================================================== */
 
 function getValue(id) {
-    const element = document.getElementById(id);
-    return element ? element.value.trim() : "";
+  const element = document.getElementById(id);
+  return element ? element.value.trim() : "";
 }
 
 function setValue(id, value) {
-    const element = document.getElementById(id);
-
-    if (element) {
-        element.value = value;
-    }
+  const element = document.getElementById(id);
+  if (element) element.value = value;
 }
 
 function setText(id, value) {
-    const element = document.getElementById(id);
-
-    if (element) {
-        element.textContent = value;
-    }
+  const element = document.getElementById(id);
+  if (element) element.textContent = value;
 }
 
 function scrollToSection(id) {
-    const section = document.getElementById(id);
+  const section = document.getElementById(id);
 
-    if (section) {
-        section.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-    }
+  if (section) {
+    section.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
 }
 
-function normalizeText(value) {
-    return String(value || "")
-        .toLowerCase()
-        .trim();
+function normalizeText(text) {
+  return String(text || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s]/gi, "");
 }
 
-function escapeHTML(value) {
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+function escapeHTML(text) {
+  return String(text || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
-
-/* ================= HOME BUTTONS ================= */
+/* =====================================================
+   HERO BUTTONS
+===================================================== */
 
 function goToSeller() {
-    scrollToSection("seller");
+  const sellerSection =
+    document.getElementById("sellerSection") ||
+    document.getElementById("seller") ||
+    document.getElementById("sellerDashboard");
+
+  if (sellerSection) {
+    sellerSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  } else {
+    window.location.hash = "sellerSection";
+  }
 }
 
 function goToBuyer() {
-    scrollToSection("buyer");
+  const buyerSection =
+    document.getElementById("buyerSection") ||
+    document.getElementById("buyer") ||
+    document.getElementById("buyerDashboard");
+
+  if (buyerSection) {
+    buyerSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  } else {
+    window.location.hash = "buyerSection";
+  }
 }
 
-
-/* ================= MOBILE MENU ================= */
+/* =====================================================
+   PAGE INITIALIZATION
+===================================================== */
 
 document.addEventListener("DOMContentLoaded", function () {
-    const menuToggle = document.getElementById("menuToggle");
-    const navLinks = document.getElementById("navLinks");
-
-    if (menuToggle && navLinks) {
-        menuToggle.addEventListener("click", function () {
-            navLinks.classList.toggle("active");
-            navLinks.classList.toggle("open");
-        });
-
-        navLinks.querySelectorAll("a").forEach(function (link) {
-            link.addEventListener("click", function () {
-                navLinks.classList.remove("active");
-                navLinks.classList.remove("open");
-            });
-        });
-    }
-
-    const navbarLanguageSelect =
-        document.getElementById("navbarLanguageSelect");
-
-    if (navbarLanguageSelect) {
-        navbarLanguageSelect.value = selectedLanguage;
-    }
-
-    const languageSelect =
-        document.getElementById("languageSelect");
-
-    if (languageSelect) {
-        languageSelect.value = selectedLanguage;
-    }
-
-    const sellerLanguageSelect =
-        document.getElementById("sellerLanguageSelect");
-
-    if (sellerLanguageSelect) {
-        sellerLanguageSelect.value = sellerLanguage;
-    }
-
-    setupImagePreview();
-    initializePage();
+  setupMobileMenu();
+  setupImagePreview();
+  initializePage();
+  loadSavedProducts();
+  showOrderRequests();
 });
 
+/* =====================================================
+   MOBILE MENU
+===================================================== */
 
-/* ================= IMAGE PREVIEW ================= */
+function setupMobileMenu() {
+  const menuButton =
+    document.getElementById("menuButton") ||
+    document.querySelector(".menu-toggle") ||
+    document.querySelector(".hamburger");
+
+  const navMenu =
+    document.getElementById("navMenu") ||
+    document.querySelector(".nav-links") ||
+    document.querySelector("nav ul");
+
+  if (menuButton && navMenu) {
+    menuButton.addEventListener("click", function () {
+      navMenu.classList.toggle("active");
+    });
+  }
+}
+
+/* =====================================================
+   IMAGE PREVIEW
+===================================================== */
 
 function setupImagePreview() {
-    const input = document.getElementById("productImage");
-    const preview = document.getElementById("imagePreview");
-    const placeholder =
-        document.getElementById("uploadPlaceholder");
+  const imageInput =
+    document.getElementById("productImage") ||
+    document.getElementById("imageUpload") ||
+    document.querySelector('input[type="file"]');
 
-    const uploadArea =
-        document.getElementById("uploadArea");
+  const imagePreview =
+    document.getElementById("imagePreview") ||
+    document.querySelector(".image-preview");
 
-    if (!input) return;
+  if (!imageInput) return;
 
-    input.addEventListener("change", function () {
-        const file = input.files[0];
+  imageInput.addEventListener("change", function (event) {
+    const file = event.target.files[0];
 
-        if (!file) return;
+    if (!file) return;
 
-        if (!file.type.startsWith("image/")) {
-            alert("Please select an image file.");
-            return;
-        }
+    const reader = new FileReader();
 
-        const reader = new FileReader();
+    reader.onload = function (e) {
+      if (imagePreview) {
+        imagePreview.src = e.target.result;
+        imagePreview.style.display = "block";
+      }
 
-        reader.onload = function (event) {
-            if (preview) {
-                preview.src = event.target.result;
-                preview.style.display = "block";
-            }
+      const previewContainer =
+        document.getElementById("previewContainer");
 
-            if (placeholder) {
-                placeholder.style.display = "none";
-            }
-        };
+      if (previewContainer) {
+        previewContainer.style.display = "block";
+      }
+    };
 
-        reader.readAsDataURL(file);
-    });
-
-    if (uploadArea) {
-        uploadArea.addEventListener("click", function (event) {
-            if (event.target !== input) {
-                input.click();
-            }
-        });
-    }
+    reader.readAsDataURL(file);
+  });
 }
 
+/* =====================================================
+   VOICE RECOGNITION
+===================================================== */
 
-/* ================= VOICE RECOGNITION ================= */
+function createVoiceRecognition(inputId, language = "en-IN") {
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
 
-function createVoiceRecognition(
-    statusId,
-    callback,
-    languageCode = selectedLanguage
-) {
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Voice recognition is not supported in this browser.");
+    return;
+  }
 
-    const status =
-        document.getElementById(statusId);
+  const input = document.getElementById(inputId);
 
-    if (!SpeechRecognition) {
-        if (status) {
-            status.textContent =
-                "Voice recognition is not supported. Please use Google Chrome.";
-        }
+  if (!input) return;
 
-        alert(
-            "Voice recognition works best in Google Chrome or Microsoft Edge."
-        );
+  const recognition = new SpeechRecognition();
 
-        return;
-    }
+  recognition.lang = language;
+  recognition.continuous = false;
+  recognition.interimResults = false;
 
-    const recognition = new SpeechRecognition();
+  recognition.onresult = function (event) {
+    const transcript = event.results[0][0].transcript;
+    input.value = transcript;
+  };
 
-    recognition.lang = languageCode;
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
+  recognition.onerror = function () {
+    alert("Voice input could not be detected. Please try again.");
+  };
 
-    recognition.onstart = function () {
-        if (status) {
-            status.textContent =
-                "🎙️ Listening... Please speak now.";
-        }
-    };
-
-    recognition.onresult = function (event) {
-        const transcript =
-            event.results[0][0].transcript.trim();
-
-        if (status) {
-            status.textContent =
-                "✅ Voice recognized: " + transcript;
-        }
-
-        if (callback) {
-            callback(transcript);
-        }
-    };
-
-    recognition.onerror = function (event) {
-        let message = "Voice recognition failed.";
-
-        if (event.error === "not-allowed") {
-            message =
-                "Microphone permission denied. Please allow microphone access.";
-        }
-
-        if (event.error === "no-speech") {
-            message =
-                "No speech detected. Please try again.";
-        }
-
-        if (event.error === "network") {
-            message =
-                "Network error. Please check your internet connection.";
-        }
-
-        if (status) {
-            status.textContent = "⚠️ " + message;
-        }
-    };
-
-    recognition.onend = function () {
-        if (
-            status &&
-            status.textContent.includes("Listening")
-        ) {
-            status.textContent =
-                "You can use voice again.";
-        }
-    };
-
-    try {
-        recognition.start();
-    } catch (error) {
-        console.log("Voice recognition error:", error);
-    }
+  recognition.start();
 }
-
-
-/* ================= SELLER VOICE ================= */
 
 function startSellerVoice() {
-    createVoiceRecognition(
-        "sellerVoiceStatus",
-        function (text) {
-            const productName =
-                document.getElementById("sellerProductName");
-
-            if (productName) {
-                productName.value = text;
-            }
-
-            const quantityMatch =
-                text.match(
-                    /(\d+)\s*(pieces?|piece|items?|item|kg|kgs|kilos?|కిలోలు|కిలో|नग|नगों|किलो)/i
-                );
-
-            if (quantityMatch) {
-                const quantity =
-                    document.getElementById("sellerQuantity");
-
-                if (quantity) {
-                    quantity.value = quantityMatch[1];
-                }
-            }
-
-            const priceMatch =
-                text.match(
-                    /(?:₹|rs\.?|rupees?|రూపాయలు|रुपये|रुपए)\s*(\d+)/i
-                );
-
-            if (priceMatch) {
-                const price =
-                    document.getElementById("sellerPrice");
-
-                if (price) {
-                    price.value = priceMatch[1];
-                }
-            }
-        },
-        sellerLanguage
-    );
+  createVoiceRecognition("productName", "en-IN");
 }
-
-
-/* ================= BUYER VOICE ================= */
 
 function startBuyerVoice() {
-    createVoiceRecognition(
-        "buyerVoiceStatus",
-        function (text) {
-            const product =
-                document.getElementById("buyerProduct");
-
-            if (product) {
-                product.value = text;
-            }
-        },
-        selectedLanguage
-    );
+  createVoiceRecognition("buyerRequirement", "en-IN");
 }
 
-
-/* ================= LANGUAGE SYSTEM ================= */
+/* =====================================================
+   TRANSLATIONS
+===================================================== */
 
 const translations = {
-    "en-IN": {
-        sell: "Sell",
-        buy: "Buy",
-        orders: "My Orders",
-        about: "About",
+  en: {
+    home: "Home",
+    about: "About",
+    seller: "Seller",
+    buyer: "Buyer",
+    contact: "Contact",
+    heroTitle: "Connect Farmers, Craftsmen and Buyers",
+    heroDescription:
+      "Discover authentic handmade products and connect directly with trusted sellers.",
+    sellerButton: "Start Selling",
+    buyerButton: "Find Products",
+    sellerTitle: "Seller Dashboard",
+    buyerTitle: "Buyer Dashboard",
+    productName: "Product Name",
+    productDescription: "Product Description",
+    productPrice: "Product Price",
+    publish: "Publish Product",
+    search: "Search",
+    searchPlaceholder: "Search for products...",
+    noProducts: "No products found.",
+    requestBuy: "Request to Buy",
+    available: "Available",
+    category: "Category",
+    price: "Price",
+    location: "Location",
+    languageChanged: "Language changed successfully."
+  },
 
-        sellerTitle: "Sell Your Product",
-        buyerTitle: "Find Products Easily",
+  te: {
+    home: "హోమ్",
+    about: "మా గురించి",
+    seller: "విక్రేత",
+    buyer: "కొనుగోలుదారు",
+    contact: "సంప్రదించండి",
+    heroTitle: "రైతులు, కళాకారులు మరియు కొనుగోలుదారులను కలుపుదాం",
+    heroDescription:
+      "నమ్మకమైన విక్రేతల నుండి ప్రత్యేకమైన చేతిపనులను కనుగొనండి.",
+    sellerButton: "విక్రయించడం ప్రారంభించండి",
+    buyerButton: "ఉత్పత్తులను వెతకండి",
+    sellerTitle: "విక్రేత డ్యాష్‌బోర్డ్",
+    buyerTitle: "కొనుగోలుదారు డ్యాష్‌బోర్డ్",
+    productName: "ఉత్పత్తి పేరు",
+    productDescription: "ఉత్పత్తి వివరణ",
+    productPrice: "ఉత్పత్తి ధర",
+    publish: "ఉత్పత్తిని ప్రచురించండి",
+    search: "వెతకండి",
+    searchPlaceholder: "ఉత్పత్తుల కోసం వెతకండి...",
+    noProducts: "ఉత్పత్తులు కనుగొనబడలేదు.",
+    requestBuy: "కొనుగోలు అభ్యర్థన",
+    available: "అందుబాటులో ఉంది",
+    category: "వర్గం",
+    price: "ధర",
+    location: "ప్రాంతం",
+    languageChanged: "భాష విజయవంతంగా మార్చబడింది."
+  },
 
-        productName: "Product Name",
-        quantity: "Quantity",
-        expectedPrice: "Expected Price",
-        location: "Location",
+  hi: {
+    home: "होम",
+    about: "हमारे बारे में",
+    seller: "विक्रेता",
+    buyer: "खरीदार",
+    contact: "संपर्क करें",
+    heroTitle: "किसानों, कारीगरों और खरीदारों को जोड़ना",
+    heroDescription:
+      "विश्वसनीय विक्रेताओं से प्रामाणिक हस्तनिर्मित उत्पाद खोजें।",
+    sellerButton: "बेचना शुरू करें",
+    buyerButton: "उत्पाद खोजें",
+    sellerTitle: "विक्रेता डैशबोर्ड",
+    buyerTitle: "खरीदार डैशबोर्ड",
+    productName: "उत्पाद का नाम",
+    productDescription: "उत्पाद का विवरण",
+    productPrice: "उत्पाद की कीमत",
+    publish: "उत्पाद प्रकाशित करें",
+    search: "खोजें",
+    searchPlaceholder: "उत्पाद खोजें...",
+    noProducts: "कोई उत्पाद नहीं मिला।",
+    requestBuy: "खरीदने का अनुरोध",
+    available: "उपलब्ध",
+    category: "श्रेणी",
+    price: "कीमत",
+    location: "स्थान",
+    languageChanged: "भाषा सफलतापूर्वक बदल दी गई।"
+  },
 
-        generateCatalog: "Generate Smart Catalog",
-        publishProduct: "Publish Product",
+  ta: {
+    home: "முகப்பு",
+    about: "எங்களை பற்றி",
+    seller: "விற்பனையாளர்",
+    buyer: "வாங்குபவர்",
+    contact: "தொடர்பு",
+    heroTitle: "விவசாயிகள், கைவினைஞர்கள் மற்றும் வாங்குபவர்களை இணைத்தல்",
+    heroDescription:
+      "நம்பகமான விற்பனையாளர்களிடமிருந்து கைவினைப் பொருட்களை கண்டறியுங்கள்.",
+    sellerButton: "விற்பனை தொடங்குங்கள்",
+    buyerButton: "பொருட்களை தேடுங்கள்",
+    sellerTitle: "விற்பனையாளர் பகுதி",
+    buyerTitle: "வாங்குபவர் பகுதி",
+    productName: "பொருளின் பெயர்",
+    productDescription: "பொருள் விளக்கம்",
+    productPrice: "பொருள் விலை",
+    publish: "பொருளை வெளியிடுங்கள்",
+    search: "தேடல்",
+    searchPlaceholder: "பொருட்களை தேடுங்கள்...",
+    noProducts: "பொருட்கள் எதுவும் கிடைக்கவில்லை.",
+    requestBuy: "வாங்க கோரிக்கை",
+    available: "கிடைக்கிறது",
+    category: "வகை",
+    price: "விலை",
+    location: "இடம்",
+    languageChanged: "மொழி வெற்றிகரமாக மாற்றப்பட்டது."
+  },
 
-        productNeeded: "Product Needed",
-        budget: "Budget Per Piece",
-        deliveryLocation: "Delivery Location",
-        requiredBy: "Required By",
+  kn: {
+    home: "ಮುಖಪುಟ",
+    about: "ನಮ್ಮ ಬಗ್ಗೆ",
+    seller: "ಮಾರಾಟಗಾರ",
+    buyer: "ಖರೀದಿದಾರ",
+    contact: "ಸಂಪರ್ಕಿಸಿ",
+    heroTitle: "ರೈತರು, ಕುಶಲಕರ್ಮಿಗಳು ಮತ್ತು ಖರೀದಿದಾರರನ್ನು ಸಂಪರ್ಕಿಸುವುದು",
+    heroDescription:
+      "ವಿಶ್ವಾಸಾರ್ಹ ಮಾರಾಟಗಾರರಿಂದ ಕೈಯಿಂದ ತಯಾರಿಸಿದ ಉತ್ಪನ್ನಗಳನ್ನು ಹುಡುಕಿ.",
+    sellerButton: "ಮಾರಾಟ ಪ್ರಾರಂಭಿಸಿ",
+    buyerButton: "ಉತ್ಪನ್ನಗಳನ್ನು ಹುಡುಕಿ",
+    sellerTitle: "ಮಾರಾಟಗಾರರ ವಿಭಾಗ",
+    buyerTitle: "ಖರೀದಿದಾರರ ವಿಭಾಗ",
+    productName: "ಉತ್ಪನ್ನದ ಹೆಸರು",
+    productDescription: "ಉತ್ಪನ್ನ ವಿವರಣೆ",
+    productPrice: "ಉತ್ಪನ್ನದ ಬೆಲೆ",
+    publish: "ಉತ್ಪನ್ನ ಪ್ರಕಟಿಸಿ",
+    search: "ಹುಡುಕಿ",
+    searchPlaceholder: "ಉತ್ಪನ್ನಗಳನ್ನು ಹುಡುಕಿ...",
+    noProducts: "ಯಾವುದೇ ಉತ್ಪನ್ನಗಳು ಕಂಡುಬಂದಿಲ್ಲ.",
+    requestBuy: "ಖರೀದಿ ವಿನಂತಿ",
+    available: "ಲಭ್ಯವಿದೆ",
+    category: "ವರ್ಗ",
+    price: "ಬೆಲೆ",
+    location: "ಸ್ಥಳ",
+    languageChanged: "ಭಾಷೆ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಯಿಸಲಾಗಿದೆ."
+  },
 
-        findMatches: "Find AI Matches",
-        requestBuy: "Request to Buy"
-    },
-
-    "te-IN": {
-        sell: "అమ్మండి",
-        buy: "కొనండి",
-        orders: "నా ఆర్డర్లు",
-        about: "మా గురించి",
-
-        sellerTitle: "మీ ఉత్పత్తిని అమ్మండి",
-        buyerTitle: "ఉత్పత్తులను సులభంగా కనుగొనండి",
-
-        productName: "ఉత్పత్తి పేరు",
-        quantity: "పరిమాణం",
-        expectedPrice: "అంచనా ధర",
-        location: "ప్రాంతం",
-
-        generateCatalog: "స్మార్ట్ క్యాటలాగ్ తయారు చేయండి",
-        publishProduct: "ఉత్పత్తిని ప్రచురించండి",
-
-        productNeeded: "అవసరమైన ఉత్పత్తి",
-        budget: "ఒక్కొక్కటి బడ్జెట్",
-        deliveryLocation: "డెలివరీ ప్రాంతం",
-        requiredBy: "అవసరమైన తేదీ",
-
-        findMatches: "AI సరిపోలికలను కనుగొనండి",
-        requestBuy: "కొనుగోలు అభ్యర్థన"
-    },
-
-    "hi-IN": {
-        sell: "बेचें",
-        buy: "खरीदें",
-        orders: "मेरे ऑर्डर",
-        about: "हमारे बारे में",
-
-        sellerTitle: "अपना उत्पाद बेचें",
-        buyerTitle: "आसानी से उत्पाद खोजें",
-
-        productName: "उत्पाद का नाम",
-        quantity: "मात्रा",
-        expectedPrice: "अपेक्षित कीमत",
-        location: "स्थान",
-
-        generateCatalog: "स्मार्ट कैटलॉग बनाएं",
-        publishProduct: "उत्पाद प्रकाशित करें",
-
-        productNeeded: "आवश्यक उत्पाद",
-        budget: "प्रति पीस बजट",
-        deliveryLocation: "डिलीवरी स्थान",
-        requiredBy: "आवश्यक तारीख",
-
-        findMatches: "AI मैच खोजें",
-        requestBuy: "खरीदने का अनुरोध"
-    },
-
-    "ta-IN": {
-        sell: "விற்க",
-        buy: "வாங்க",
-        orders: "என் ஆர்டர்கள்",
-        about: "எங்களைப் பற்றி",
-
-        sellerTitle: "உங்கள் பொருளை விற்கவும்",
-        buyerTitle: "பொருட்களை எளிதாக கண்டறியவும்",
-
-        productName: "பொருளின் பெயர்",
-        quantity: "அளவு",
-        expectedPrice: "எதிர்பார்க்கும் விலை",
-        location: "இடம்",
-
-        generateCatalog: "ஸ்மார்ட் பட்டியல் உருவாக்கவும்",
-        publishProduct: "பொருளை வெளியிடவும்",
-
-        productNeeded: "தேவையான பொருள்",
-        budget: "ஒரு பொருளுக்கான பட்ஜெட்",
-        deliveryLocation: "டெலிவரி இடம்",
-        requiredBy: "தேவையான தேதி",
-
-        findMatches: "AI பொருத்தங்களை கண்டறியவும்",
-        requestBuy: "வாங்க கோரிக்கை"
-    },
-
-    "kn-IN": {
-        sell: "ಮಾರಾಟ",
-        buy: "ಖರೀದಿ",
-        orders: "ನನ್ನ ಆರ್ಡರ್‌ಗಳು",
-        about: "ನಮ್ಮ ಬಗ್ಗೆ",
-
-        sellerTitle: "ನಿಮ್ಮ ಉತ್ಪನ್ನವನ್ನು ಮಾರಾಟ ಮಾಡಿ",
-        buyerTitle: "ಉತ್ಪನ್ನಗಳನ್ನು ಸುಲಭವಾಗಿ ಹುಡುಕಿ",
-
-        productName: "ಉತ್ಪನ್ನದ ಹೆಸರು",
-        quantity: "ಪ್ರಮಾಣ",
-        expectedPrice: "ನಿರೀಕ್ಷಿತ ಬೆಲೆ",
-        location: "ಸ್ಥಳ",
-
-        generateCatalog: "ಸ್ಮಾರ್ಟ್ ಕ್ಯಾಟಲಾಗ್ ರಚಿಸಿ",
-        publishProduct: "ಉತ್ಪನ್ನವನ್ನು ಪ್ರಕಟಿಸಿ",
-
-        productNeeded: "ಬೇಕಾದ ಉತ್ಪನ್ನ",
-        budget: "ಪ್ರತಿ ಉತ್ಪನ್ನದ ಬಜೆಟ್",
-        deliveryLocation: "ವಿತರಣಾ ಸ್ಥಳ",
-        requiredBy: "ಬೇಕಾದ ದಿನಾಂಕ",
-
-        findMatches: "AI ಹೊಂದಾಣಿಕೆಗಳನ್ನು ಹುಡುಕಿ",
-        requestBuy: "ಖರೀದಿ ವಿನಂತಿ"
-    },
-
-    "ml-IN": {
-        sell: "വിൽക്കുക",
-        buy: "വാങ്ങുക",
-        orders: "എന്റെ ഓർഡറുകൾ",
-        about: "ഞങ്ങളെക്കുറിച്ച്",
-
-        sellerTitle: "നിങ്ങളുടെ ഉൽപ്പന്നം വിൽക്കുക",
-        buyerTitle: "ഉൽപ്പന്നങ്ങൾ എളുപ്പത്തിൽ കണ്ടെത്തുക",
-
-        productName: "ഉൽപ്പന്നത്തിന്റെ പേര്",
-        quantity: "അളവ്",
-        expectedPrice: "പ്രതീക്ഷിക്കുന്ന വില",
-        location: "സ്ഥലം",
-
-        generateCatalog: "സ്മാർട്ട് കാറ്റലോഗ് തയ്യാറാക്കുക",
-        publishProduct: "ഉൽപ്പന്നം പ്രസിദ്ധീകരിക്കുക",
-
-        productNeeded: "ആവശ്യമായ ഉൽപ്പന്നം",
-        budget: "ഒരു ഉൽപ്പന്നത്തിനുള്ള ബജറ്റ്",
-        deliveryLocation: "ഡെലിവറി സ്ഥലം",
-        requiredBy: "ആവശ്യമായ തീയതി",
-
-        findMatches: "AI പൊരുത്തങ്ങൾ കണ്ടെത്തുക",
-        requestBuy: "വാങ്ങാനുള്ള അഭ്യർത്ഥന"
-    }
+  ml: {
+    home: "ഹോം",
+    about: "ഞങ്ങളെക്കുറിച്ച്",
+    seller: "വിൽപ്പനക്കാരൻ",
+    buyer: "വാങ്ങുന്നയാൾ",
+    contact: "ബന്ധപ്പെടുക",
+    heroTitle: "കർഷകരെയും കരകൗശല വിദഗ്ധരെയും വാങ്ങുന്നവരെയും ബന്ധിപ്പിക്കുന്നു",
+    heroDescription:
+      "വിശ്വസനീയമായ വിൽപ്പനക്കാരിൽ നിന്ന് കൈകൊണ്ട് നിർമ്മിച്ച ഉൽപ്പന്നങ്ങൾ കണ്ടെത്തുക.",
+    sellerButton: "വിൽപ്പന ആരംഭിക്കുക",
+    buyerButton: "ഉൽപ്പന്നങ്ങൾ കണ്ടെത്തുക",
+    sellerTitle: "വിൽപ്പനക്കാരുടെ വിഭാഗം",
+    buyerTitle: "വാങ്ങുന്നവരുടെ വിഭാഗം",
+    productName: "ഉൽപ്പന്നത്തിന്റെ പേര്",
+    productDescription: "ഉൽപ്പന്ന വിവരണം",
+    productPrice: "ഉൽപ്പന്ന വില",
+    publish: "ഉൽപ്പന്നം പ്രസിദ്ധീകരിക്കുക",
+    search: "തിരയുക",
+    searchPlaceholder: "ഉൽപ്പന്നങ്ങൾ തിരയുക...",
+    noProducts: "ഉൽപ്പന്നങ്ങളൊന്നും കണ്ടെത്തിയില്ല.",
+    requestBuy: "വാങ്ങാനുള്ള അഭ്യർത്ഥന",
+    available: "ലഭ്യമാണ്",
+    category: "വിഭാഗം",
+    price: "വില",
+    location: "സ്ഥലം",
+    languageChanged: "ഭാഷ വിജയകരമായി മാറ്റി."
+  }
 };
 
+/* =====================================================
+   LANGUAGE CHANGE
+===================================================== */
 
-/* ================= CHANGE NAVBAR LANGUAGE ================= */
-
-function changeNavbarLanguage() {
-    const select =
-        document.getElementById("navbarLanguageSelect");
-
-    if (!select) return;
-
-    selectedLanguage = select.value;
-
-    localStorage.setItem(
-        "agriCraftLanguage",
-        selectedLanguage
-    );
-
-    const buyerSelect =
-        document.getElementById("languageSelect");
-
-    if (buyerSelect) {
-        buyerSelect.value = selectedLanguage;
-    }
-
-    applyLanguage(selectedLanguage);
+function changeNavbarLanguage(language) {
+  selectedLanguage = language || "en";
+  applyLanguage(selectedLanguage);
 }
 
-
-/* ================= CHANGE BUYER LANGUAGE ================= */
-
-function changeLanguage() {
-    const select =
-        document.getElementById("languageSelect");
-
-    if (!select) return;
-
-    selectedLanguage = select.value;
-
-    localStorage.setItem(
-        "agriCraftLanguage",
-        selectedLanguage
-    );
-
-    const navbarSelect =
-        document.getElementById("navbarLanguageSelect");
-
-    if (navbarSelect) {
-        navbarSelect.value = selectedLanguage;
-    }
-
-    applyLanguage(selectedLanguage);
-
-    const status =
-        document.getElementById("buyerVoiceStatus");
-
-    if (status) {
-        status.textContent =
-            "Buyer voice language changed successfully.";
-    }
+function changeSellerLanguage(language) {
+  sellerLanguage = language || "en";
+  applyLanguage(sellerLanguage);
 }
-
-
-/* ================= CHANGE SELLER LANGUAGE ================= */
-
-function changeSellerLanguage() {
-    const select =
-        document.getElementById("sellerLanguageSelect");
-
-    if (!select) return;
-
-    sellerLanguage = select.value;
-
-    localStorage.setItem(
-        "agriCraftSellerLanguage",
-        sellerLanguage
-    );
-
-    const status =
-        document.getElementById("sellerVoiceStatus");
-
-    if (status) {
-        status.textContent =
-            "Seller voice language changed successfully.";
-    }
-}
-
-
-/* ================= APPLY LANGUAGE ================= */
 
 function applyLanguage(language) {
-    const t =
-        translations[language] ||
-        translations["en-IN"];
+  const data = translations[language] || translations.en;
 
-    const navLinks =
-        document.querySelectorAll("#navLinks a");
+  /* Navigation */
+  document.querySelectorAll("[data-translate]").forEach(function (element) {
+    const key = element.getAttribute("data-translate");
 
-    if (navLinks.length >= 5) {
-        navLinks[0].textContent = "Home";
-        navLinks[1].textContent = t.sell;
-        navLinks[2].textContent = t.buy;
-        navLinks[3].textContent = t.orders;
-        navLinks[4].textContent = t.about;
+    if (data[key]) {
+      element.textContent = data[key];
     }
+  });
 
-    const sellerHeading =
-        document.querySelector("#seller .left-heading h2");
+  /* Hero content */
+  setText("heroTitle", data.heroTitle);
+  setText("heroDescription", data.heroDescription);
+  setText("sellerHeroButton", data.sellerButton);
+  setText("buyerHeroButton", data.buyerButton);
 
-    if (sellerHeading) {
-        sellerHeading.textContent = t.sellerTitle;
-    }
+  /* Section headings */
+  setText("sellerTitle", data.sellerTitle);
+  setText("buyerTitle", data.buyerTitle);
 
-    const buyerHeading =
-        document.querySelector("#buyer .section-heading h2");
+  /* Labels */
+  setText("productNameLabel", data.productName);
+  setText("productDescriptionLabel", data.productDescription);
+  setText("productPriceLabel", data.productPrice);
 
-    if (buyerHeading) {
-        buyerHeading.textContent = t.buyerTitle;
-    }
+  /* Buttons */
+  setText("publishButton", data.publish);
+  setText("searchButton", data.search);
 
-    const sellerLabels =
-        document.querySelectorAll("#seller .field-label");
+  /* Search placeholder */
+  const searchInput =
+    document.getElementById("buyerRequirement") ||
+    document.getElementById("searchInput");
 
-    if (sellerLabels.length >= 4) {
-        sellerLabels[0].textContent = "Product Photo";
-        sellerLabels[1].textContent = t.productName;
-        sellerLabels[2].textContent = t.quantity;
-        sellerLabels[3].textContent = t.expectedPrice;
-    }
-
-    const sellerLocation =
-        document.getElementById("sellerLocation");
-
-    if (sellerLocation) {
-        sellerLocation.placeholder =
-            language === "te-IN"
-                ? "ఉదాహరణ: ఏలూరు"
-                : "Example: Eluru";
-    }
-
-    const generateButton =
-        document.querySelector(
-            'button[onclick="generateCatalog()"]'
-        );
-
-    if (generateButton) {
-        generateButton.textContent =
-            t.generateCatalog;
-    }
-
-    const publishButton =
-        document.querySelector(
-            'button[onclick="publishProduct()"]'
-        );
-
-    if (publishButton) {
-        publishButton.textContent =
-            t.publishProduct;
-    }
-
-    const buyerLabels =
-        document.querySelectorAll("#buyer .field-label");
-
-    if (buyerLabels.length >= 5) {
-        buyerLabels[0].textContent =
-            "🌐 Select Your Language";
-
-        buyerLabels[1].textContent =
-            t.productNeeded;
-
-        buyerLabels[2].textContent =
-            t.quantity;
-
-        buyerLabels[3].textContent =
-            t.budget;
-
-        buyerLabels[4].textContent =
-            t.deliveryLocation;
-
-        if (buyerLabels[5]) {
-            buyerLabels[5].textContent =
-                t.requiredBy;
-        }
-    }
-
-    const matchButton =
-        document.querySelector(
-            'button[onclick="findAIMatches()"]'
-        );
-
-    if (matchButton) {
-        matchButton.textContent =
-            t.findMatches;
-    }
-
-    const requestButton =
-        document.querySelector(
-            'button[onclick="requestToBuy()"]'
-        );
-
-    if (requestButton) {
-        requestButton.textContent =
-            t.requestBuy;
-    }
+  if (searchInput) {
+    searchInput.placeholder = data.searchPlaceholder;
+  }
 }
-
-
-/* ================= INITIALIZE PAGE ================= */
 
 function initializePage() {
-    const navbarLanguageSelect =
-        document.getElementById("navbarLanguageSelect");
+  const languageSelect =
+    document.getElementById("navbarLanguageSelect") ||
+    document.getElementById("languageSelect");
 
-    if (navbarLanguageSelect) {
-        navbarLanguageSelect.value = selectedLanguage;
-    }
+  if (languageSelect) {
+    languageSelect.value = selectedLanguage;
 
-    const languageSelect =
-        document.getElementById("languageSelect");
+    languageSelect.addEventListener("change", function () {
+      changeNavbarLanguage(this.value);
+    });
+  }
 
-    if (languageSelect) {
-        languageSelect.value = selectedLanguage;
-    }
-
-    const sellerLanguageSelect =
-        document.getElementById("sellerLanguageSelect");
-
-    if (sellerLanguageSelect) {
-        sellerLanguageSelect.value = sellerLanguage;
-    }
-
-    applyLanguage(selectedLanguage);
-
-    const processing =
-        document.getElementById("aiProcessing");
-
-    const catalogResult =
-        document.getElementById("catalogResult");
-
-    const catalogEmpty =
-        document.getElementById("catalogEmpty");
-
-    const matchCard =
-        document.getElementById("matchCard");
-
-    const matchEmpty =
-        document.getElementById("matchEmpty");
-
-    if (processing) {
-        processing.style.display = "none";
-    }
-
-    if (catalogResult) {
-        catalogResult.style.display = "none";
-    }
-
-    if (catalogEmpty) {
-        catalogEmpty.style.display = "block";
-    }
-
-    if (matchCard) {
-        matchCard.style.display = "none";
-    }
-
-    if (matchEmpty) {
-        matchEmpty.style.display = "block";
-    }
+  applyLanguage(selectedLanguage);
 }
 
+/* =====================================================
+   PRODUCT CATEGORY DETECTION
+===================================================== */
 
-/* ================= CATEGORY DETECTION ================= */
+function detectCategory(productName) {
+  const text = normalizeText(productName);
 
-function detectCategory(name) {
-    const text = normalizeText(name);
+  const potteryWords = [
+    "pottery",
+    "pot",
+    "clay",
+    "ceramic",
+    "terracotta",
+    "diya",
+    "diyas",
+    "matka",
+    "handi",
+    "mud pot",
+    "కుండ",
+    "మట్టి",
+    "మట్టి కుండ",
+    "मिट्टी",
+    "बर्तन",
+    "களிமண்",
+    "ಮಣ್ಣಿನ",
+    "മൺപാത്രം"
+  ];
 
-    if (
-        text.includes("saree") ||
-        text.includes("sari") ||
-        text.includes("dress") ||
-        text.includes("cloth") ||
-        text.includes("handloom") ||
-        text.includes("cotton") ||
-        text.includes("చీర") ||
-        text.includes("साड़ी")
-    ) {
-        return "Handloom & Textile";
-    }
+  const basketWords = [
+    "basket",
+    "bamboo basket",
+    "bamboo",
+    "wicker",
+    "cane",
+    "handwoven basket",
+    "బుట్ట",
+    "వెదురు",
+    "बांस",
+    "टोकरी",
+    "கூடை",
+    "ಬುಟ್ಟಿ",
+    "കൊട്ട"
+  ];
 
-    if (
-        text.includes("pottery") ||
-        text.includes("clay") ||
-        text.includes("ceramic") ||
-        text.includes("కుండ") ||
-        text.includes("मिट्टी")
-    ) {
-        return "Pottery & Craft";
-    }
+  const textileWords = [
+    "saree",
+    "sari",
+    "shawl",
+    "scarf",
+    "dress",
+    "cloth",
+    "cotton",
+    "handloom",
+    "textile",
+    "చీర",
+    "దుపట్టా",
+    "వస్త్రం",
+    "साड़ी",
+    "कपड़ा",
+    "புடவை",
+    "ಸೀರೆ",
+    "സാരി"
+  ];
 
-    if (
-        text.includes("basket") ||
-        text.includes("bamboo") ||
-        text.includes("wood") ||
-        text.includes("బుట్ట") ||
-        text.includes("बांस")
-    ) {
-        return "Handicraft";
-    }
+  const jewelryWords = [
+    "jewellery",
+    "jewelry",
+    "necklace",
+    "earrings",
+    "bangles",
+    "bracelet",
+    "ring",
+    "చెవి దిద్దులు",
+    "హారం",
+    "गहना",
+    "हार",
+    "நகை",
+    "ಆಭರಣ",
+    "ആഭരണം"
+  ];
 
-    if (
-        text.includes("honey") ||
-        text.includes("pickle") ||
-        text.includes("spice") ||
-        text.includes("food") ||
-        text.includes("తేనె") ||
-        text.includes("ఆవకాయ") ||
-        text.includes("शहद")
-    ) {
-        return "Food & Natural Products";
-    }
+  const foodWords = [
+    "pickle",
+    "honey",
+    "spice",
+    "spices",
+    "organic",
+    "food",
+    "rice",
+    "millet",
+    "turmeric",
+    "పచ్చడి",
+    "తేనె",
+    "సుగంధ ద్రవ్యాలు",
+    "अचार",
+    "शहद",
+    "மசாலா",
+    "ಜೇನುತುಪ್ಪ",
+    "അച്ചാർ"
+  ];
 
-    if (
-        text.includes("vegetable") ||
-        text.includes("fruit") ||
-        text.includes("rice") ||
-        text.includes("grain") ||
-        text.includes("కూరగాయ") ||
-        text.includes("బియ్యం")
-    ) {
-        return "Agricultural Produce";
-    }
+  if (potteryWords.some(word => text.includes(normalizeText(word)))) {
+    return "pottery";
+  }
 
-    return "Rural Product";
+  if (basketWords.some(word => text.includes(normalizeText(word)))) {
+    return "basket";
+  }
+
+  if (textileWords.some(word => text.includes(normalizeText(word)))) {
+    return "textile";
+  }
+
+  if (jewelryWords.some(word => text.includes(normalizeText(word)))) {
+    return "jewelry";
+  }
+
+  if (foodWords.some(word => text.includes(normalizeText(word)))) {
+    return "food";
+  }
+
+  return "craft";
 }
 
+/* =====================================================
+   DIFFERENT PRODUCT IMAGES
+===================================================== */
 
-/* ================= TAG GENERATION ================= */
+function getProductImage(productName) {
+  const category = detectCategory(productName);
 
-function generateTags(name) {
-    const text = normalizeText(name);
+  const imageMap = {
+    pottery: "images/craft1.jpg",
+    basket: "images/craft2.jpg",
+    textile: "images/craft3.jpg",
+    jewelry: "images/craft4.jpg",
+    food: "images/craft5.jpg",
+    craft: "images/craft6.jpg"
+  };
 
-    const tags = [
-        "Handmade",
-        "Local"
-    ];
-
-    if (
-        text.includes("cotton") ||
-        text.includes("చీర")
-    ) {
-        tags.push("Cotton");
-    }
-
-    if (
-        text.includes("handloom") ||
-        text.includes("saree") ||
-        text.includes("sari")
-    ) {
-        tags.push("Handloom");
-    }
-
-    if (text.includes("organic")) {
-        tags.push("Organic");
-    }
-
-    if (
-        text.includes("bamboo") ||
-        text.includes("బాంబూ")
-    ) {
-        tags.push("Eco-friendly");
-    }
-
-    return tags.join(", ");
+  return imageMap[category] || "images/craft6.jpg";
 }
 
+/* =====================================================
+   PRODUCT TAGS
+===================================================== */
 
-/* ================= PRODUCT KEYWORDS ================= */
+function generateTags(productName, description = "") {
+  const category = detectCategory(productName);
 
-function createProductKeywords(name) {
-    const text = normalizeText(name);
+  const categoryTags = {
+    pottery: ["Handmade", "Clay", "Traditional", "Eco-friendly"],
+    basket: ["Bamboo", "Handwoven", "Natural", "Eco-friendly"],
+    textile: ["Handloom", "Cotton", "Traditional", "Artisan-made"],
+    jewelry: ["Handcrafted", "Unique", "Traditional", "Artisan-made"],
+    food: ["Organic", "Natural", "Homemade", "Fresh"],
+    craft: ["Handmade", "Artisan-made", "Traditional", "Unique"]
+  };
 
-    const keywordMap = {
-        saree: [
-            "saree",
-            "sari",
-            "చీర",
-            "చీరలు",
-            "साड़ी",
-            "cotton",
-            "handloom"
-        ],
+  const baseTags = categoryTags[category] || categoryTags.craft;
 
-        pottery: [
-            "pottery",
-            "pot",
-            "clay",
-            "కుండ",
-            "మట్టి",
-            "मिट्टी",
-            "ceramic"
-        ],
+  const words = normalizeText(
+    productName + " " + description
+  ).split(" ");
 
-        basket: [
-            "basket",
-            "bamboo",
-            "బుట్ట",
-            "బాంబూ",
-            "बांस",
-            "handicraft"
-        ],
+  const extraTags = [];
 
-        honey: [
-            "honey",
-            "తేనె",
-            "मधु",
-            "शहद",
-            "organic"
-        ],
+  words.forEach(function (word) {
+    if (
+      word.length > 3 &&
+      !baseTags.map(tag => normalizeText(tag)).includes(word)
+    ) {
+      extraTags.push(word.charAt(0).toUpperCase() + word.slice(1));
+    }
+  });
 
-        pickle: [
-            "pickle",
-            "ఆవకాయ",
-            "పచ్చడి",
-            "अचार",
-            "food"
-        ],
+  return [...new Set([...baseTags, ...extraTags])].slice(0, 6);
+}
 
-        rice: [
-            "rice",
-            "బియ్యం",
-            "चावल",
-            "grain"
-        ],
+/* =====================================================
+   PRODUCT KEYWORDS
+===================================================== */
 
-        vegetables: [
-            "vegetable",
-            "vegetables",
-            "కూరగాయలు",
-            "सब्जी"
-        ],
+function createProductKeywords(name, description = "") {
+  const category = detectCategory(name);
 
-        fruits: [
-            "fruit",
-            "fruits",
-            "పండ్లు",
-            "फल"
-        ]
+  const keywords = [
+    normalizeText(name),
+    normalizeText(description),
+    category,
+    ...generateTags(name, description).map(tag => normalizeText(tag))
+  ];
+
+  return [...new Set(keywords.filter(Boolean))];
+}
+
+/* =====================================================
+   AI CATALOG GENERATION
+===================================================== */
+
+function generateCatalog() {
+  const name =
+    getValue("productName") ||
+    getValue("productTitle");
+
+  const description =
+    getValue("productDescription") ||
+    getValue("description");
+
+  const price =
+    getValue("productPrice") ||
+    getValue("price");
+
+  const location =
+    getValue("sellerLocation") ||
+    getValue("location") ||
+    "India";
+
+  if (!name) {
+    alert("Please enter a product name.");
+    return;
+  }
+
+  const category = detectCategory(name);
+  const tags = generateTags(name, description);
+  const keywords = createProductKeywords(name, description);
+
+  const imageInput =
+    document.getElementById("productImage") ||
+    document.getElementById("imageUpload") ||
+    document.querySelector('input[type="file"]');
+
+  const file = imageInput && imageInput.files
+    ? imageInput.files[0]
+    : null;
+
+  function createCatalog(imageSource) {
+    currentCatalog = {
+      id: Date.now(),
+      name: name,
+      description: description || "Handcrafted quality product.",
+      price: price || "Contact seller",
+      location: location,
+      category: category,
+      tags: tags,
+      keywords: keywords,
+      image: imageSource,
+      seller: "Local Artisan",
+      status: "Available",
+      createdAt: new Date().toISOString()
     };
 
-    let keywords = [text];
+    displayGeneratedCatalog(currentCatalog);
+  }
 
-    Object.keys(keywordMap).forEach(function (key) {
-        const relatedWords = keywordMap[key];
+  if (file) {
+    const reader = new FileReader();
 
-        const matched = relatedWords.some(function (word) {
-            return text.includes(word);
-        });
+    reader.onload = function (event) {
+      createCatalog(event.target.result);
+    };
 
-        if (matched) {
-            keywords = keywords.concat(relatedWords);
-        }
-    });
-
-    return [...new Set(keywords)].join(", ");
+    reader.readAsDataURL(file);
+  } else {
+    createCatalog(getProductImage(name));
+  }
 }
 
+/* =====================================================
+   DISPLAY GENERATED CATALOG
+===================================================== */
 
-/* ================= AI CATALOG GENERATION ================= */
+function displayGeneratedCatalog(product) {
+  const catalogContainer =
+    document.getElementById("catalogResult") ||
+    document.getElementById("generatedCatalog") ||
+    document.querySelector(".catalog-result");
 
-let imageSource = "images/craft1.jpg";
+  if (!catalogContainer) {
+    alert("Catalog generated successfully.");
+    return;
+  }
 
-const productText = String(name || "").toLowerCase();
+  catalogContainer.innerHTML = `
+    <div class="generated-product-card">
+      <img
+        src="${escapeHTML(product.image)}"
+        alt="${escapeHTML(product.name)}"
+        class="generated-product-image"
+      />
 
-// Handloom Sarees — English, Telugu, Hindi, Tamil, Kannada
-if (
-  productText.includes("saree") ||
-  productText.includes("sarees") ||
-  productText.includes("handloom") ||
-  productText.includes("చీర") ||
-  productText.includes("చీరలు") ||
-  productText.includes("साड़ी") ||
-  productText.includes("साडियां") ||
-  productText.includes("சேலை") ||
-  productText.includes("ಸೀರೆ")
-) {
-  imageSource = "images/craft1.jpg";
+      <div class="generated-product-content">
+        <span class="product-category">
+          ${escapeHTML(product.category)}
+        </span>
+
+        <h3>${escapeHTML(product.name)}</h3>
+
+        <p>${escapeHTML(product.description)}</p>
+
+        <p>
+          <strong>Price:</strong>
+          ₹${escapeHTML(product.price)}
+        </p>
+
+        <p>
+          <strong>Location:</strong>
+          ${escapeHTML(product.location)}
+        </p>
+
+        <div class="product-tags">
+          ${product.tags
+            .map(tag => `<span>${escapeHTML(tag)}</span>`)
+            .join("")}
+        </div>
+
+        <button onclick="publishProduct()" class="primary-button">
+          Publish Product
+        </button>
+      </div>
+    </div>
+  `;
+
+  catalogContainer.style.display = "block";
 }
 
-// Handmade Pottery — English, Telugu, Hindi, Tamil, Kannada
-} else if (
-  productText.includes("pottery") ||
-  productText.includes("pot") ||
-  productText.includes("కుండ") ||
-  productText.includes("మట్టి") ||
-  productText.includes("मिट्टी") ||
-  productText.includes("बर्तन") ||
-  productText.includes("மண்பாண்டம்") ||
-  productText.includes("ಮಣ್ಣಿನ")
-) {
-  imageSource = "images/craft2.jpg";
-}
-
-// Handmade Basket — English, Telugu, Hindi, Tamil, Kannada
-} else if (
-  productText.includes("basket") ||
-  productText.includes("handmade") ||
-  productText.includes("బుట్ట") ||
-  productText.includes("చేతిపని") ||
-  productText.includes("टोकरी") ||
-  productText.includes("हस्तनिर्मित") ||
-  productText.includes("கூடை") ||
-  productText.includes("கைவினை") ||
-  productText.includes("ಬುಟ್ಟಿ") ||
-  productText.includes("ಕೈಯಿಂದ ಮಾಡಿದ")
-) {
-  imageSource = "images/craft3.jpg";
-}
-
-/* ================= PUBLISH PRODUCT ================= */
+/* =====================================================
+   PUBLISH PRODUCT
+===================================================== */
 
 function publishProduct() {
-    if (!currentCatalog) {
-        alert(
-            "Please generate the Smart Catalog first."
-        );
+  if (!currentCatalog) {
+    generateCatalog();
+    return;
+  }
 
-        return;
-    }
+  const products = JSON.parse(
+    localStorage.getItem("agriCraftProducts") || "[]"
+  );
 
-    let products =
-        JSON.parse(
-            localStorage.getItem("agriCraftProducts")
-        ) || [];
+  products.push(currentCatalog);
 
-    const product = {
-        ...currentCatalog,
+  localStorage.setItem(
+    "agriCraftProducts",
+    JSON.stringify(products)
+  );
 
-        publishedAt:
-            new Date().toISOString(),
+  alert("Product published successfully!");
 
-        seller:
-            "Verified Rural Producer"
-    };
+  currentCatalog = null;
 
-    products.push(product);
+  const catalogContainer =
+    document.getElementById("catalogResult") ||
+    document.getElementById("generatedCatalog");
 
-    localStorage.setItem(
-        "agriCraftProducts",
-        JSON.stringify(products)
-    );
+  if (catalogContainer) {
+    catalogContainer.innerHTML = "";
+    catalogContainer.style.display = "none";
+  }
 
-    alert(
-        "✅ Product published successfully!\n\n" +
-        "Product: " +
-        product.name
-    );
-
-    setTimeout(function () {
-        goToBuyer();
-    }, 300);
+  clearSellerForm();
+  loadSavedProducts();
 }
 
+/* =====================================================
+   CLEAR SELLER FORM
+===================================================== */
 
-/* ================= DEMO PRODUCTS ================= */
+function clearSellerForm() {
+  [
+    "productName",
+    "productTitle",
+    "productDescription",
+    "description",
+    "productPrice",
+    "price",
+    "sellerLocation",
+    "location"
+  ].forEach(function (id) {
+    setValue(id, "");
+  });
+
+  const imageInput =
+    document.getElementById("productImage") ||
+    document.getElementById("imageUpload");
+
+  if (imageInput) {
+    imageInput.value = "";
+  }
+
+  const imagePreview =
+    document.getElementById("imagePreview");
+
+  if (imagePreview) {
+    imagePreview.src = "";
+    imagePreview.style.display = "none";
+  }
+}
+
+/* =====================================================
+   LOAD SAVED PRODUCTS
+===================================================== */
+
+function loadSavedProducts() {
+  const products = JSON.parse(
+    localStorage.getItem("agriCraftProducts") || "[]"
+  );
+
+  displayProducts(products);
+}
+
+/* =====================================================
+   DEMO PRODUCTS
+===================================================== */
 
 function getDemoProducts() {
-    return [
-        {
-            id: "DEMO-001",
-            name: "Handwoven Cotton Saree",
-            quantity: "20",
-            price: "2000",
-            location: "Eluru",
-            category: "Handloom & Textile",
-            tags: "Handmade, Local, Cotton, Handloom",
-            keywords:
-                "saree, sari, cotton, handloom, చీర, साड़ी",
-            image: "images/craft1.jpg",
-            description:
-                "Traditional handwoven cotton saree made by a rural artisan."
-        },
-
-        {
-            id: "DEMO-002",
-            name: "Traditional Clay Pottery",
-            quantity: "30",
-            price: "450",
-            location: "Vijayawada",
-            category: "Pottery & Craft",
-            tags: "Clay, Handmade, Traditional",
-            keywords:
-                "pottery, clay, pot, ceramic, కుండ, మట్టి",
-            image: "images/pottery.jpg",
-            description:
-                "Beautiful handmade clay pottery created by local artisans."
-        },
-
-        {
-            id: "DEMO-003",
-            name: "Bamboo Handmade Basket",
-            quantity: "15",
-            price: "350",
-            location: "Rajahmundry",
-            category: "Handicraft",
-            tags: "Bamboo, Handmade, Eco-friendly",
-            keywords:
-                "basket, bamboo, handicraft, బుట్ట, బాంబూ",
-            image: "images/basket.jpg",
-            description:
-                "Eco-friendly bamboo basket made using traditional techniques."
-        },
-
-        {
-            id: "DEMO-004",
-            name: "Natural Organic Honey",
-            quantity: "25",
-            price: "600",
-            location: "Hyderabad",
-            category: "Food & Natural Products",
-            tags: "Honey, Organic, Natural",
-            keywords:
-                "honey, organic, natural, తేనె, शहद",
-            image: "images/honey.jpg",
-            description:
-                "Pure natural honey collected from local beekeepers."
-        },
-
-        {
-            id: "DEMO-005",
-            name: "Homemade Mango Pickle",
-            quantity: "40",
-            price: "250",
-            location: "Guntur",
-            category: "Food & Natural Products",
-            tags: "Pickle, Homemade, Food",
-            keywords:
-                "pickle, mango pickle, ఆవకాయ, పచ్చడి, अचार",
-            image: "images/pickle.jpg",
-            description:
-                "Traditional homemade mango pickle prepared with authentic spices."
-        }
-    ];
+  return [
+    {
+      id: "demo1",
+      name: "Traditional Clay Pottery",
+      description:
+        "Beautiful handmade pottery created by local artisans.",
+      price: "799",
+      location: "Hyderabad",
+      category: "pottery",
+      tags: ["Handmade", "Clay", "Traditional"],
+      keywords: ["pottery", "clay", "handmade", "traditional"],
+      image: "images/craft1.jpg",
+      seller: "Local Potter",
+      status: "Available"
+    },
+    {
+      id: "demo2",
+      name: "Bamboo Handwoven Basket",
+      description:
+        "Eco-friendly bamboo basket suitable for home decoration.",
+      price: "499",
+      location: "Vijayawada",
+      category: "basket",
+      tags: ["Bamboo", "Handwoven", "Eco-friendly"],
+      keywords: ["basket", "bamboo", "handwoven"],
+      image: "images/craft2.jpg",
+      seller: "Village Crafts",
+      status: "Available"
+    },
+    {
+      id: "demo3",
+      name: "Handloom Cotton Saree",
+      description:
+        "Comfortable traditional cotton saree made by skilled weavers.",
+      price: "1499",
+      location: "Visakhapatnam",
+      category: "textile",
+      tags: ["Handloom", "Cotton", "Traditional"],
+      keywords: ["saree", "cotton", "handloom", "textile"],
+      image: "images/craft3.jpg",
+      seller: "Handloom Weaver",
+      status: "Available"
+    }
+  ];
 }
 
+/* =====================================================
+   DISPLAY PRODUCTS
+===================================================== */
 
-/* ================= PRODUCT MATCH SCORE ================= */
+function displayProducts(products) {
+  const productContainer =
+    document.getElementById("productsContainer") ||
+    document.getElementById("productResults") ||
+    document.querySelector(".products-container");
 
-function calculateProductScore(
-    product,
-    requestedProduct,
-    budget,
-    buyerLocation
-) {
-    const request =
-        normalizeText(requestedProduct);
+  if (!productContainer) return;
 
-    const productName =
-        normalizeText(product.name);
+  const allProducts = [
+    ...getDemoProducts(),
+    ...products
+  ];
 
-    const productTags =
-        normalizeText(product.tags);
+  if (allProducts.length === 0) {
+    productContainer.innerHTML = `
+      <p class="no-products">
+        ${translations[selectedLanguage].noProducts}
+      </p>
+    `;
+    return;
+  }
 
-    const productKeywords =
-        normalizeText(product.keywords);
+  productContainer.innerHTML = allProducts
+    .map(function (product) {
+      return `
+        <div class="product-card">
+          <img
+            src="${escapeHTML(product.image)}"
+            alt="${escapeHTML(product.name)}"
+            class="product-image"
+          />
 
-    const productCategory =
-        normalizeText(product.category);
-
-    const productLocation =
-        normalizeText(product.location);
-
-    let score = 0;
-
-    if (!request) {
-        return 0;
-    }
-
-    if (productName === request) {
-        score += 100;
-    }
-
-    if (
-        productName.includes(request) ||
-        request.includes(productName)
-    ) {
-        score += 60;
-    }
-
-    const requestWords =
-        request.split(/\s+/);
-
-    requestWords.forEach(function (word) {
-        if (word.length < 2) return;
-
-        if (productName.includes(word)) {
-            score += 25;
-        }
-
-        if (productTags.includes(word)) {
-            score += 20;
-        }
-
-        if (productKeywords.includes(word)) {
-            score += 25;
-        }
-
-        if (productCategory.includes(word)) {
-            score += 15;
-        }
-    });
-
-    if (budget) {
-        const productPrice =
-            Number(product.price) || 0;
-
-        if (productPrice <= Number(budget)) {
-            score += 15;
-        } else {
-            score -= 10;
-        }
-    }
-
-    if (buyerLocation) {
-        const requestedLocation =
-            normalizeText(buyerLocation);
-
-        if (
-            productLocation.includes(requestedLocation) ||
-            requestedLocation.includes(productLocation)
-        ) {
-            score += 20;
-        }
-    }
-
-    return score;
-}
-
-
-/* ================= AI PRODUCT MATCHING ================= */
-
-function findAIMatches() {
-    const requestedProduct =
-        getValue("buyerProduct");
-
-    const requestedQuantity =
-        getValue("buyerQuantity");
-
-    const budget =
-        getValue("buyerBudget");
-
-    const buyerLocation =
-        getValue("buyerLocation");
-
-    if (!requestedProduct) {
-        alert(
-            "Please enter the product you are looking for."
-        );
-
-        document.getElementById(
-            "buyerProduct"
-        )?.focus();
-
-        return;
-    }
-
-    const publishedProducts =
-        JSON.parse(
-            localStorage.getItem("agriCraftProducts")
-        ) || [];
-
-    const demoProducts =
-        getDemoProducts();
-
-    const allProducts = [
-        ...publishedProducts,
-        ...demoProducts
-    ];
-
-    let bestProduct = null;
-    let bestScore = 0;
-
-    allProducts.forEach(function (product) {
-        const score =
-            calculateProductScore(
-                product,
-                requestedProduct,
-                budget,
-                buyerLocation
-            );
-
-        if (score > bestScore) {
-            bestScore = score;
-            bestProduct = product;
-        }
-    });
-
-    const matchCard =
-        document.getElementById("matchCard");
-
-    const matchEmpty =
-        document.getElementById("matchEmpty");
-
-    if (!bestProduct || bestScore <= 0) {
-        currentMatch = null;
-
-        if (matchCard) {
-            matchCard.style.display = "none";
-        }
-
-        if (matchEmpty) {
-            matchEmpty.style.display = "block";
-
-            matchEmpty.innerHTML = `
-                <div class="empty-message">
-                    <h3>🔍 No Matching Product Found</h3>
-                    <p>
-                        We could not find a product matching
-                        "${escapeHTML(requestedProduct)}".
-                    </p>
-                    <p>
-                        Try searching for saree, pottery,
-                        basket, honey or pickle.
-                    </p>
-                </div>
-            `;
-        }
-
-        return;
-    }
-
-    currentMatch = {
-        ...bestProduct,
-        requestedQuantity:
-            requestedQuantity || "1",
-        requestedBudget:
-            budget || "",
-        buyerLocation:
-            buyerLocation || "",
-        requiredBy:
-            getValue("buyerDate"),
-        matchScore:
-            Math.min(100, bestScore)
-    };
-
-    const matchImage =
-        document.getElementById(
-            "matchedProductImage"
-        );
-
-    if (matchImage) {
-        matchImage.src =
-            currentMatch.image;
-
-        matchImage.onerror = function () {
-            this.style.display = "none";
-        };
-    }
-
-    setText(
-        "matchedProductName",
-        currentMatch.name
-    );
-
-    setText(
-        "matchedProductDescription",
-        currentMatch.description ||
-        "Verified rural producer product."
-    );
-
-    const details =
-        document.getElementById(
-            "matchedProductDetails"
-        );
-
-    if (details) {
-        details.innerHTML = `
-            <span>
-                📦 ${escapeHTML(
-                    currentMatch.quantity || "Available"
-                )} pieces
+          <div class="product-card-content">
+            <span class="product-category">
+              ${escapeHTML(product.category)}
             </span>
 
-            <span>
-                ₹${Number(currentMatch.price || 0)
-                    .toLocaleString("en-IN")} / piece
-            </span>
+            <h3>${escapeHTML(product.name)}</h3>
 
-            <span>
-                📍 ${escapeHTML(
-                    currentMatch.location || "Local"
-                )}
-            </span>
-        `;
-    }
+            <p>${escapeHTML(product.description)}</p>
 
-    if (matchEmpty) {
-        matchEmpty.style.display = "none";
-    }
+            <p class="product-price">
+              ₹${escapeHTML(product.price)}
+            </p>
 
-    if (matchCard) {
-        matchCard.style.display = "block";
-    }
+            <p class="product-location">
+              📍 ${escapeHTML(product.location)}
+            </p>
+
+            <div class="product-tags">
+              ${(product.tags || [])
+                .map(tag => `<span>${escapeHTML(tag)}</span>`)
+                .join("")}
+            </div>
+
+            <button
+              class="primary-button"
+              onclick="requestToBuy('${product.id}')"
+            >
+              ${translations[selectedLanguage].requestBuy}
+            </button>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
 }
 
+/* =====================================================
+   SEARCH PRODUCTS
+===================================================== */
 
-/* ================= REQUEST TO BUY ================= */
+function searchProducts() {
+  const searchInput =
+    getValue("buyerRequirement") ||
+    getValue("searchInput") ||
+    getValue("productSearch");
 
-function requestToBuy() {
-    if (!currentMatch) {
-        alert(
-            "Please find an AI match first."
-        );
+  const searchText = normalizeText(searchInput);
 
-        return;
-    }
+  const savedProducts = JSON.parse(
+    localStorage.getItem("agriCraftProducts") || "[]"
+  );
 
-    const buyerProduct =
-        getValue("buyerProduct");
+  const allProducts = [
+    ...getDemoProducts(),
+    ...savedProducts
+  ];
 
-    const buyerQuantity =
-        Number(
-            getValue("buyerQuantity")
-        ) || 1;
+  if (!searchText) {
+    displayProducts(allProducts);
+    return;
+  }
 
-    const buyerBudget =
-        Number(
-            getValue("buyerBudget")
-        ) || Number(currentMatch.price) || 0;
+  const matchedProducts = allProducts.filter(function (product) {
+    const searchableText = [
+      product.name,
+      product.description,
+      product.category,
+      product.location,
+      ...(product.tags || []),
+      ...(product.keywords || [])
+    ]
+      .join(" ")
+      .toLowerCase();
 
-    const buyerLocation =
-        getValue("buyerLocation");
+    return searchableText.includes(searchText);
+  });
 
-    const requiredBy =
-        getValue("buyerDate");
-
-    const unitPrice =
-        Number(currentMatch.price) || 0;
-
-    const totalAmount =
-        unitPrice * buyerQuantity;
-
-    const orderId =
-        "AC-" +
-        Date.now().toString().slice(-8);
-
-    const order = {
-        id: orderId,
-
-        productName:
-            currentMatch.name,
-
-        productImage:
-            currentMatch.image,
-
-        sellerLocation:
-            currentMatch.location,
-
-        buyerProduct:
-            buyerProduct,
-
-        quantity:
-            buyerQuantity,
-
-        budget:
-            buyerBudget,
-
-        unitPrice:
-            unitPrice,
-
-        total:
-            totalAmount,
-
-        buyerLocation:
-            buyerLocation || "Not specified",
-
-        requiredBy:
-            requiredBy || "Not specified",
-
-        status:
-            "Order Confirmed",
-
-        trackingStep:
-            1,
-
-        createdAt:
-            new Date().toISOString()
-    };
-
-    let orders =
-        JSON.parse(
-            localStorage.getItem("agriCraftOrders")
-        ) || [];
-
-    orders.push(order);
-
-    localStorage.setItem(
-        "agriCraftOrders",
-        JSON.stringify(orders)
-    );
-
-    localStorage.setItem(
-        "myBookings",
-        JSON.stringify(orders)
-    );
-
-    alert(
-        "✅ Order request submitted successfully!\n\n" +
-        "Order ID: " +
-        orderId +
-        "\n" +
-        "Product: " +
-        order.productName
-    );
-
-    showVerifiedOrder();
-
-    setTimeout(function () {
-        scrollToSection("orders");
-    }, 300);
+  displayProducts(matchedProducts);
 }
 
+/* =====================================================
+   AI MATCHING
+===================================================== */
 
-/* ================= GET ORDERS ================= */
+function calculateProductScore(product, requirement) {
+  const searchText = normalizeText(requirement);
+
+  if (!searchText) return 0;
+
+  const words = searchText.split(" ");
+
+  const searchableText = [
+    product.name,
+    product.description,
+    product.category,
+    product.location,
+    ...(product.tags || []),
+    ...(product.keywords || [])
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  let score = 0;
+
+  words.forEach(function (word) {
+    if (word.length > 2 && searchableText.includes(word)) {
+      score += 1;
+    }
+  });
+
+  if (normalizeText(product.name).includes(searchText)) {
+    score += 5;
+  }
+
+  if (normalizeText(product.category).includes(searchText)) {
+    score += 3;
+  }
+
+  return score;
+}
+
+function findAIMatches(requirement) {
+  const savedProducts = JSON.parse(
+    localStorage.getItem("agriCraftProducts") || "[]"
+  );
+
+  const allProducts = [
+    ...getDemoProducts(),
+    ...savedProducts
+  ];
+
+  const matches = allProducts
+    .map(function (product) {
+      return {
+        ...product,
+        score: calculateProductScore(product, requirement)
+      };
+    })
+    .filter(product => product.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  currentMatch = matches.length > 0 ? matches[0] : null;
+
+  displayProducts(matches);
+
+  return matches;
+}
+
+/* =====================================================
+   BUYER SEARCH BUTTON
+===================================================== */
+
+function handleBuyerSearch() {
+  const requirement =
+    getValue("buyerRequirement") ||
+    getValue("searchInput") ||
+    getValue("productSearch");
+
+  if (!requirement) {
+    alert("Please enter a product name or requirement.");
+    return;
+  }
+
+  findAIMatches(requirement);
+}
+
+/* =====================================================
+   REQUEST TO BUY
+===================================================== */
+
+function requestToBuy(productId) {
+  const savedProducts = JSON.parse(
+    localStorage.getItem("agriCraftProducts") || "[]"
+  );
+
+  const product = [
+    ...getDemoProducts(),
+    ...savedProducts
+  ].find(item => String(item.id) === String(productId));
+
+  if (!product) {
+    alert("Product not found.");
+    return;
+  }
+
+  const buyerName =
+    getValue("buyerName") ||
+    "Interested Buyer";
+
+  const buyerContact =
+    getValue("buyerContact") ||
+    "Not provided";
+
+  const orders = JSON.parse(
+    localStorage.getItem("agriCraftOrders") || "[]"
+  );
+
+  const order = {
+    id: Date.now(),
+    productId: product.id,
+    productName: product.name,
+    productImage: product.image,
+    price: product.price,
+    seller: product.seller,
+    buyerName: buyerName,
+    buyerContact: buyerContact,
+    location: product.location,
+    status: "Pending",
+    createdAt: new Date().toISOString()
+  };
+
+  orders.push(order);
+
+  localStorage.setItem(
+    "agriCraftOrders",
+    JSON.stringify(orders)
+  );
+
+  alert("Your purchase request has been sent successfully!");
+
+  showOrderRequests();
+}
+
+/* =====================================================
+   ORDER REQUESTS
+===================================================== */
 
 function getOrders() {
-    return JSON.parse(
-        localStorage.getItem("agriCraftOrders")
-    ) || [];
+  return JSON.parse(
+    localStorage.getItem("agriCraftOrders") || "[]"
+  );
 }
-
-
-/* ================= SHOW BUYER REQUESTS ================= */
 
 function showOrderRequests() {
-    const orders =
-        getOrders();
+  const container =
+    document.getElementById("orderRequests") ||
+    document.getElementById("ordersContainer");
 
-    const output =
-        document.getElementById("orderOutput");
+  if (!container) return;
 
-    if (!output) return;
+  const orders = getOrders();
 
-    if (orders.length === 0) {
-        output.innerHTML = `
-            <div class="empty-message">
-                <h3>📩 No Buyer Requests Yet</h3>
-                <p>
-                    Buyer requests will appear here
-                    after a buyer places an order.
-                </p>
-            </div>
-        `;
-
-        return;
-    }
-
-    output.innerHTML = `
-        <div class="generated-orders">
-            <h3>📩 Buyer Requests</h3>
-
-            ${orders.map(function (order) {
-                return `
-                    <div class="generated-order-card">
-                        <div>
-                            <strong>
-                                ${escapeHTML(order.productName)}
-                            </strong>
-
-                            <p>
-                                Quantity:
-                                ${escapeHTML(order.quantity)}
-                            </p>
-
-                            <p>
-                                Buyer Location:
-                                ${escapeHTML(order.buyerLocation)}
-                            </p>
-
-                            <p>
-                                Required By:
-                                ${escapeHTML(order.requiredBy)}
-                            </p>
-                        </div>
-
-                        <span class="verified-tag">
-                            ${escapeHTML(order.status)}
-                        </span>
-
-                        <button
-                            class="btn secondary"
-                            type="button"
-                            onclick="trackOrder('${escapeHTML(order.id)}')"
-                        >
-                            Track Order
-                        </button>
-                    </div>
-                `;
-            }).join("")}
-        </div>
+  if (orders.length === 0) {
+    container.innerHTML = `
+      <p class="no-orders">No order requests yet.</p>
     `;
+    return;
+  }
+
+  container.innerHTML = orders
+    .map(function (order) {
+      return `
+        <div class="order-card">
+          <img
+            src="${escapeHTML(order.productImage)}"
+            alt="${escapeHTML(order.productName)}"
+          />
+
+          <div>
+            <h3>${escapeHTML(order.productName)}</h3>
+            <p>Buyer: ${escapeHTML(order.buyerName)}</p>
+            <p>Contact: ${escapeHTML(order.buyerContact)}</p>
+            <p>Price: ₹${escapeHTML(order.price)}</p>
+            <p>Status: <strong>${escapeHTML(order.status)}</strong></p>
+          </div>
+
+          <button
+            onclick="showVerifiedOrder('${order.id}')"
+            class="secondary-button"
+          >
+            View Details
+          </button>
+        </div>
+      `;
+    })
+    .join("");
 }
 
+function showVerifiedOrder(orderId) {
+  const order = getOrders().find(
+    item => String(item.id) === String(orderId)
+  );
 
-/* ================= SHOW VERIFIED ORDER ================= */
+  if (!order) return;
 
-function showVerifiedOrder() {
-    const orders =
-        getOrders();
-
-    const output =
-        document.getElementById("orderOutput");
-
-    if (!output) return;
-
-    if (orders.length === 0) {
-        output.innerHTML = `
-            <div class="empty-message">
-                <h3>🧾 No Verified Orders</h3>
-                <p>
-                    Your confirmed order receipt
-                    will appear here.
-                </p>
-            </div>
-        `;
-
-        return;
-    }
-
-    const order =
-        orders[orders.length - 1];
-
-    output.innerHTML = `
-        <div class="receipt-card">
-            <div class="receipt-header">
-                <div>
-                    <span class="eyebrow">
-                        VERIFIED ORDER
-                    </span>
-
-                    <h3>
-                        🧾 Digital Order Receipt
-                    </h3>
-                </div>
-
-                <strong>
-                    ${escapeHTML(order.id)}
-                </strong>
-            </div>
-
-            <div class="receipt-body">
-                <div class="receipt-product">
-                    <img
-                        src="${escapeHTML(order.productImage)}"
-                        alt="Product"
-                    >
-
-                    <div>
-                        <h3>
-                            ${escapeHTML(order.productName)}
-                        </h3>
-
-                        <p>
-                            Rural Verified Producer
-                        </p>
-                    </div>
-                </div>
-
-                <div class="receipt-details">
-                    <p>
-                        <strong>Quantity:</strong>
-                        ${escapeHTML(order.quantity)}
-                    </p>
-
-                    <p>
-                        <strong>Price per Piece:</strong>
-                        ₹${Number(order.unitPrice)
-                            .toLocaleString("en-IN")}
-                    </p>
-
-                    <p>
-                        <strong>Total Amount:</strong>
-                        ₹${Number(order.total)
-                            .toLocaleString("en-IN")}
-                    </p>
-
-                    <p>
-                        <strong>Delivery Location:</strong>
-                        ${escapeHTML(order.buyerLocation)}
-                    </p>
-
-                    <p>
-                        <strong>Required By:</strong>
-                        ${escapeHTML(order.requiredBy)}
-                    </p>
-
-                    <p>
-                        <strong>Status:</strong>
-                        <span class="verified-tag">
-                            ${escapeHTML(order.status)}
-                        </span>
-                    </p>
-                </div>
-            </div>
-
-            <div class="receipt-actions">
-                <button
-                    class="btn primary"
-                    type="button"
-                    onclick="trackOrder('${escapeHTML(order.id)}')"
-                >
-                    📦 Track Order
-                </button>
-            </div>
-        </div>
-    `;
+  alert(
+    `Product: ${order.productName}\n` +
+    `Buyer: ${order.buyerName}\n` +
+    `Contact: ${order.buyerContact}\n` +
+    `Status: ${order.status}`
+  );
 }
 
-
-/* ================= TRACK ORDER ================= */
+/* =====================================================
+   TRACK ORDER
+===================================================== */
 
 function trackOrder(orderId) {
-    const orders =
-        getOrders();
+  const order = getOrders().find(
+    item => String(item.id) === String(orderId)
+  );
 
-    const order =
-        orders.find(function (item) {
-            return item.id === orderId;
-        });
+  if (!order) {
+    alert("Order not found.");
+    return;
+  }
 
-    const output =
-        document.getElementById("orderOutput");
-
-    if (!order || !output) return;
-
-    const steps = [
-        {
-            title: "Order Confirmed",
-            icon: "✅"
-        },
-        {
-            title: "Seller Processing",
-            icon: "📦"
-        },
-        {
-            title: "Ready for Delivery",
-            icon: "🚚"
-        },
-        {
-            title: "Delivered",
-            icon: "🏠"
-        }
-    ];
-
-    output.innerHTML = `
-        <div class="tracking-card">
-            <div class="tracking-header">
-                <span class="eyebrow">
-                    ORDER TRACKING
-                </span>
-
-                <h3>
-                    📦 Track Order
-                </h3>
-
-                <p>
-                    Order ID:
-                    <strong>
-                        ${escapeHTML(order.id)}
-                    </strong>
-                </p>
-            </div>
-
-            <div class="tracking-product">
-                <img
-                    src="${escapeHTML(order.productImage)}"
-                    alt="Product"
-                >
-
-                <div>
-                    <h3>
-                        ${escapeHTML(order.productName)}
-                    </h3>
-
-                    <p>
-                        Quantity:
-                        ${escapeHTML(order.quantity)}
-                    </p>
-
-                    <p>
-                        Delivery:
-                        ${escapeHTML(order.buyerLocation)}
-                    </p>
-                </div>
-            </div>
-
-            <div class="tracking-timeline">
-                ${steps.map(function (step, index) {
-                    const completed =
-                        index <=
-                        (order.trackingStep || 1) - 1;
-
-                    return `
-                        <div class="
-                            tracking-step
-                            ${completed ? "completed" : ""}
-                        ">
-                            <div class="tracking-icon">
-                                ${step.icon}
-                            </div>
-
-                            <div>
-                                <strong>
-                                    ${step.title}
-                                </strong>
-
-                                <small>
-                                    ${
-                                        completed
-                                            ? "Completed"
-                                            : "Pending"
-                                    }
-                                </small>
-                            </div>
-                        </div>
-                    `;
-                }).join("")}
-            </div>
-
-            <div class="tracking-status">
-                <strong>
-                    Current Status:
-                </strong>
-
-                ${escapeHTML(order.status)}
-            </div>
-        </div>
-    `;
+  alert(`Order Status: ${order.status}`);
 }
 
-
-/* ================= DELETE ORDERS ================= */
+/* =====================================================
+   CLEAR ORDERS
+===================================================== */
 
 function clearOrders() {
-    localStorage.removeItem("agriCraftOrders");
-    localStorage.removeItem("myBookings");
+  const confirmClear = confirm(
+    "Are you sure you want to clear all orders?"
+  );
 
-    alert(
-        "All saved orders have been cleared."
-    );
+  if (!confirmClear) return;
 
-    showVerifiedOrder();
+  localStorage.removeItem("agriCraftOrders");
+  showOrderRequests();
 }
 
+/* =====================================================
+   MODAL FUNCTIONS
+===================================================== */
 
-/* ================= MODAL ================= */
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
 
-function openModal(content) {
-    const overlay =
-        document.getElementById("modalOverlay");
-
-    const modalContent =
-        document.getElementById("modalContent");
-
-    if (!overlay || !modalContent) return;
-
-    modalContent.innerHTML = content;
-
-    overlay.classList.add("active");
-    overlay.style.display = "flex";
+  if (modal) {
+    modal.style.display = "flex";
+  }
 }
 
-function closeModal() {
-    const overlay =
-        document.getElementById("modalOverlay");
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
 
-    if (!overlay) return;
-
-    overlay.classList.remove("active");
-    overlay.style.display = "none";
+  if (modal) {
+    modal.style.display = "none";
+  }
 }
 
-
-/* ================= MODAL OUTSIDE CLICK ================= */
-
-document.addEventListener("click", function (event) {
-    const overlay =
-        document.getElementById("modalOverlay");
-
-    if (
-        overlay &&
-        event.target === overlay
-    ) {
-        closeModal();
+window.addEventListener("click", function (event) {
+  document.querySelectorAll(".modal").forEach(function (modal) {
+    if (event.target === modal) {
+      modal.style.display = "none";
     }
+  });
 });
 
-
-/* ================= EXPORT GLOBAL FUNCTIONS ================= */
+/* =====================================================
+   GLOBAL FUNCTIONS
+===================================================== */
 
 window.goToSeller = goToSeller;
 window.goToBuyer = goToBuyer;
 
+window.changeNavbarLanguage = changeNavbarLanguage;
+window.changeSellerLanguage = changeSellerLanguage;
+window.applyLanguage = applyLanguage;
+
 window.startSellerVoice = startSellerVoice;
 window.startBuyerVoice = startBuyerVoice;
-
-window.changeNavbarLanguage = changeNavbarLanguage;
-window.changeLanguage = changeLanguage;
-window.changeSellerLanguage = changeSellerLanguage;
 
 window.generateCatalog = generateCatalog;
 window.publishProduct = publishProduct;
 
+window.searchProducts = searchProducts;
+window.handleBuyerSearch = handleBuyerSearch;
 window.findAIMatches = findAIMatches;
-window.requestToBuy = requestToBuy;
 
+window.requestToBuy = requestToBuy;
 window.showOrderRequests = showOrderRequests;
 window.showVerifiedOrder = showVerifiedOrder;
-
 window.trackOrder = trackOrder;
 window.clearOrders = clearOrders;
 
