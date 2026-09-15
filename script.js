@@ -1819,3 +1819,40 @@ window.clearOrders = clearOrders;
 
 window.openModal = openModal;
 window.closeModal = closeModal;
+function calculateSellingPrice() {
+  const rawMaterialCost =
+    parseFloat(document.getElementById("rawMaterialCost").value) || 0;
+
+  const labourCost =
+    parseFloat(document.getElementById("labourCost").value) || 0;
+
+  const otherExpenses =
+    parseFloat(document.getElementById("otherExpenses").value) || 0;
+
+  const profitMargin =
+    parseFloat(document.getElementById("profitMargin").value) || 0;
+
+  const totalCost = rawMaterialCost + labourCost + otherExpenses;
+
+  const profitAmount = totalCost * (profitMargin / 100);
+
+  const suggestedSellingPrice = totalCost + profitAmount;
+
+  document.getElementById("sellingPriceResult").innerHTML = `
+    <div class="price-summary">
+      <p><strong>Raw Material Cost:</strong> ₹${rawMaterialCost.toFixed(2)}</p>
+      <p><strong>Labour Cost:</strong> ₹${labourCost.toFixed(2)}</p>
+      <p><strong>Other Expenses:</strong> ₹${otherExpenses.toFixed(2)}</p>
+      <p><strong>Total Production Cost:</strong> ₹${totalCost.toFixed(2)}</p>
+      <p><strong>Profit Amount:</strong> ₹${profitAmount.toFixed(2)}</p>
+      <h3>Suggested Selling Price: ₹${suggestedSellingPrice.toFixed(2)}</h3>
+    </div>
+  `;
+
+  // Automatically fill the seller price field
+  const sellerPriceInput = document.getElementById("sellerPrice");
+
+  if (sellerPriceInput) {
+    sellerPriceInput.value = suggestedSellingPrice.toFixed(2);
+  }
+}
